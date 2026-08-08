@@ -86,12 +86,12 @@ UnminedGuideLocations = {
         { name: "第一次氷塊リニア開拓記念駅", x: -6463, z: 448, category: "station", dimension: "overworld" },
         { name: "スポーン地点", x: 0, z: 0, category: "spawn", dimension: "overworld", description: "ワールドの初期スポーン地点" },
         { name: "エンド到着地点", x: 100, z: 0, y: 49, category: "spawn", dimension: "end", description: "エンドに入ったとき降りる黒曜石の台" },
-        { name: "ネザーポータル 1", x: -504, z: -136, y: 45, category: "portal", dimension: "nether", description: "地上側 X -4032 / Z -1088" },
-        { name: "ネザーポータル 2", x: -138, z: 45, y: 80, category: "portal", dimension: "nether", description: "地上側 X -1104 / Z 360" },
-        { name: "ネザーポータル 3", x: -120, z: 173, y: 106, category: "portal", dimension: "nether", description: "地上側 X -960 / Z 1384" },
-        { name: "ネザーポータル 4", x: 716, z: -740, y: 75, category: "portal", dimension: "nether", description: "地上側 X 5728 / Z -5920" },
-        { name: "ネザーポータル 5", x: 1100, z: 138, y: 71, category: "portal", dimension: "nether", description: "地上側 X 8800 / Z 1104" },
-        { name: "ネザーポータル 6", x: 4543, z: -93, y: 77, category: "portal", dimension: "nether", description: "地上側 X 36344 / Z -744" }
+        { name: "ネザーポータル 1", x: -138, z: 45, y: 80, category: "portal", dimension: "nether" },
+        { name: "ネザーポータル 2", x: -504, z: -136, y: 45, category: "portal", dimension: "nether" },
+        { name: "ネザーポータル 3", x: -120, z: 173, y: 106, category: "portal", dimension: "nether" },
+        { name: "ネザーポータル 4", x: 716, z: -740, y: 75, category: "portal", dimension: "nether" },
+        { name: "ネザーポータル 5", x: 1100, z: 138, y: 71, category: "portal", dimension: "nether" },
+        { name: "ネザーポータル 6", x: 4543, z: -93, y: 77, category: "portal", dimension: "nether" }
     ],
 
     areas: [
