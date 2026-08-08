@@ -46,11 +46,32 @@
     .dim b { display: block; font-size: 16px; font-weight: 700; transition: color .18s; }
     .dim:hover b { color: var(--accent); }
     .dim-note { display: block; margin-top: 3px; font-size: 13px; color: var(--dim); }
+    .dim-date {
+        display: block; margin-top: 6px;
+        font-size: 11.5px; font-weight: 700; letter-spacing: .04em;
+        color: rgba(255,255,255,.3); font-variant-numeric: tabular-nums;
+    }
+
+    /* 「いつの地図か」。地形が古いのではと迷わせないよう見出しのすぐ下に置く。 */
+    .updated {
+        display: inline-flex; align-items: center; gap: 8px;
+        margin: 16px 0 18px; padding: 5px 13px 5px 11px;
+        font-size: 12.5px; font-weight: 700; letter-spacing: .02em;
+        color: rgba(255,255,255,.72);
+        border: 1px solid var(--line); border-radius: 999px;
+        font-variant-numeric: tabular-nums;
+    }
+    .updated-dot {
+        width: 7px; height: 7px; border-radius: 50%;
+        background: var(--accent); box-shadow: 0 0 0 3px rgba(0,229,160,.16);
+    }
 
     @media (max-width: 620px) {
         body { padding: 18px 16px 52px; }
         .back { margin-bottom: 30px; }
         .lead { margin-bottom: 32px; }
+        h1 { padding-bottom: 12px; }
+        .dims { gap: 18px; }
     }
 </style>
 </head>
@@ -61,6 +82,7 @@
         サイトに戻る
     </a>
     <h1>ワールドマップ</h1>
+    <p class="updated"><span class="updated-dot"></span>ワールドデータ 2026年8月8日 時点</p>
     <p class="lead">見たいディメンションを選んでください。地点をタップすると名前と座標が表示されます。</p>
     <div class="dims">
         <a class="dim" href="overworld/">
@@ -68,6 +90,7 @@
             <span class="dim-body">
                 <b>オーバーワールド</b>
                 <span class="dim-note">地上の世界</span>
+                <span class="dim-date">2026-08-08 時点</span>
             </span>
         </a>
         <a class="dim" href="nether/">
@@ -75,6 +98,7 @@
             <span class="dim-body">
                 <b>ネザー</b>
                 <span class="dim-note">岩盤の天井を外して描画</span>
+                <span class="dim-date">2026-08-08 時点</span>
             </span>
         </a>
         <a class="dim" href="end/">
@@ -82,6 +106,7 @@
             <span class="dim-body">
                 <b>エンド</b>
                 <span class="dim-note">果ての世界</span>
+                <span class="dim-date">2026-08-08 時点</span>
             </span>
         </a>
     </div>

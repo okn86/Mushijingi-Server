@@ -1,7 +1,7 @@
 /* 自動生成。編集しても render-map.ps1 の実行で上書きされる。
    地点は guide.locations.csv、範囲は guide.areas.csv、
    カテゴリは guide.categories.csv を編集すること。
-   生成元: 地点 12 件 / 範囲 0 件 / カテゴリ 15 件 */
+   生成元: 地点 47 件 / 範囲 1 件 / カテゴリ 15 件 */
 
 UnminedGuideLocations = {
 
@@ -29,16 +29,51 @@ UnminedGuideLocations = {
         { name: "蟲神器街駅", x: -955, z: 454, category: "station", dimension: "overworld" },
         { name: "内永建設銀行", x: -974, z: 347, category: "shop", dimension: "overworld" },
         { name: "Awesome Hotel", x: -957, z: 438, category: "shop", dimension: "overworld" },
-        { name: "YAJU RECORDS", x: -988, z: 389, category: "build", dimension: "overworld" },
+        { name: "YAJU RECORDS", x: -988, z: 389, category: "shop", dimension: "overworld" },
         { name: "アヴェニール芳山", x: -954, z: 416, category: "build", dimension: "overworld" },
         { name: "NEC本社ビル", x: -945, z: 523, category: "build", dimension: "overworld" },
         { name: "Awesome Garden", x: -804, z: 395, category: "build", dimension: "overworld" },
         { name: "殖栗建設事務所", x: -875, z: 432, category: "build", dimension: "overworld" },
-        { name: "パハールガンジ（ジモティ）", x: -960, z: 395, category: "town", dimension: "overworld" },
-        { name: "おさ村", x: -832, z: 490, category: "town", dimension: "overworld" }
+        { name: "パハールガンジ(ジモティ)", x: -960, z: 395, category: "build", dimension: "overworld" },
+        { name: "おさ村", x: -832, z: 490, category: "town", dimension: "overworld" },
+        { name: "Osanomon Hills", x: -925, z: 423, category: "build", dimension: "overworld" },
+        { name: "パハールガンズィ", x: -993, z: 443, category: "build", dimension: "overworld" },
+        { name: "美術館", x: -949, z: 485, category: "build", dimension: "overworld" },
+        { name: "おさ村前駅(旧:近すぎワロンタ君駅)", x: -880, z: 457, category: "station", dimension: "overworld" },
+        { name: "ふぐり邸", x: -993, z: 413, category: "build", dimension: "overworld" },
+        { name: "オサムハルカス", x: -1031, z: 507, category: "build", dimension: "overworld" },
+        { name: "Awesom建築事務所", x: -1048, z: 497, category: "build", dimension: "overworld" },
+        { name: "三内丸山遺跡", x: -1053, z: 542, category: "structure", dimension: "overworld" },
+        { name: "Awesome Cube", x: -1089, z: 548, category: "build", dimension: "overworld" },
+        { name: "いさばちハウス", x: -989, z: 468, category: "build", dimension: "overworld" },
+        { name: "べんぱく", x: -922, z: 403, category: "build", dimension: "overworld" },
+        { name: "歴史文化遺産管理センター", x: -1025, z: 375, category: "public", dimension: "overworld" },
+        { name: "ウヌバ城", x: -1003, z: 369, category: "structure", dimension: "overworld" },
+        { name: "親子家", x: -1000, z: 349, category: "build", dimension: "overworld" },
+        { name: "子作りハウス", x: -987, z: 373, category: "build", dimension: "overworld" },
+        { name: "ご老人邸", x: -992, z: 509, category: "build", dimension: "overworld" },
+        { name: "猿田殖栗邸", x: -981, z: 521, category: "build", dimension: "overworld" },
+        { name: "牛肉マシン", x: -987, z: 529, category: "mobfarm", dimension: "overworld" },
+        { name: "自動化畑", x: -988, z: 540, category: "mobfarm", dimension: "overworld" },
+        { name: "パチンコ", x: -983, z: 554, category: "mobfarm", dimension: "overworld" },
+        { name: "鈴木邸", x: -962, z: 585, category: "build", dimension: "overworld" },
+        { name: "中嶋邸", x: -1021, z: 606, category: "build", dimension: "overworld" },
+        { name: "経験値マシン", x: -904, z: 435, category: "mobfarm", dimension: "overworld" },
+        { name: "いさばちハウス2", x: -990, z: 489, category: "build", dimension: "overworld" },
+        { name: "九龍城砦", x: -1010, z: 473, category: "build", dimension: "overworld" },
+        { name: "オサムシャトー", x: -1135, z: 501, category: "build", dimension: "overworld" },
+        { name: "Awesome Base", x: -1138, z: 572, category: "build", dimension: "overworld" },
+        { name: "インコの墓", x: -1122, z: 564, category: "structure", dimension: "overworld" },
+        { name: "オサコール・ワット", x: -1181, z: 557, category: "build", dimension: "overworld" },
+        { name: "Awesome Cottage", x: -1230, z: 506, category: "build", dimension: "overworld" },
+        { name: "ご老人邸2", x: -1085, z: 373, category: "build", dimension: "overworld" },
+        { name: "地下遺跡", x: -1066, z: 771, category: "structure", dimension: "overworld" },
+        { name: "オサムガーデン別館", x: -789, z: 361, category: "build", dimension: "overworld" },
+        { name: "A.Nether Fort", x: -808, z: 303, category: "build", dimension: "overworld" },
+        { name: "Awesome farming house", x: -726, z: 259, category: "build", dimension: "overworld", description: "特別協賛:内永建設銀行" }
     ],
 
     areas: [
-
+        { name: "蟲神器市", category: "town", dimension: "overworld", points: [[-1162,285],[-1002,286],[-884,260],[-846,194],[-673,192],[-462,192],[-336,261],[-307,347],[-330,542],[-426,631],[-611,631],[-680,673],[-800,668],[-842,709],[-822,818],[-841,857],[-851,869],[-865,873],[-884,901],[-910,905],[-931,898],[-950,869],[-962,853],[-1055,824],[-1168,810],[-1243,751],[-1338,750],[-1415,739],[-1444,697],[-1452,668],[-1412,619],[-1389,591],[-1349,551],[-1344,358],[-1383,257],[-1335,200],[-1277,158],[-1232,180],[-1215,229],[-1193,256]] }
     ]
 };

@@ -70,7 +70,8 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
     backdrop-filter: blur(16px) saturate(1.4);
 }
 
-.brand { display: flex; align-items: center; gap: 11px; text-decoration: none; color: var(--text); }
+/* 折り返すと2行になってヘッダーの高さが崩れる。ロゴは縮めも折りもしない。 */
+.brand { display: flex; align-items: center; gap: 11px; flex: 0 0 auto; text-decoration: none; color: var(--text); }
 
 .brand-mark {
     display: flex; align-items: center; justify-content: center;
@@ -85,15 +86,17 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
 .brand-name {
     font-family: 'Shippori Mincho B1', serif;
     font-size: 17px; font-weight: 800; letter-spacing: .04em;
+    white-space: nowrap;
 }
 
-.nav { display: flex; align-items: center; gap: 4px; }
+.nav { display: flex; align-items: center; gap: 4px; min-width: 0; }
 
 .nav a {
     padding: 9px 14px;
     font-size: 14px;
     font-weight: 700;
     text-decoration: none;
+    white-space: nowrap;
     color: var(--muted);
     border-radius: 10px;
     transition: color .18s, background .18s;
@@ -253,6 +256,7 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
     min-height: 50px;
     padding: 13px 26px;
     font-size: 15px; font-weight: 800;
+    white-space: nowrap;
     text-decoration: none;
     border: 1px solid transparent; border-radius: 13px;
     cursor: pointer;
@@ -522,6 +526,7 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
     font-size: 11px;
     font-weight: 800;
     letter-spacing: .03em;
+    white-space: nowrap;   /* 幅の狭い状態列で「死／亡」に割れるのを防ぐ */
     border-radius: 999px;
 }
 .chip-live  { color: #6ee7b7; background: rgba(0, 229, 160, .13); }
@@ -530,8 +535,19 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
 .chip-date  { font-size: 11.5px; color: var(--dim); font-variant-numeric: tabular-nums; }
 
 @media (max-width: 620px) {
-    .page main.section { padding-top: 88px; }
+    .page main.section { padding-top: 84px; }
     .roster-block { margin-bottom: 40px; }
+    .roster-search { margin-bottom: 28px; }
+
+    /*
+     * スマホでは横スクロールさせず1画面に収める。
+     * 名前が長い個体が多く nowrap のままだと表が 540px 前後になり、
+     * 状態とメモが画面外に出て「死んでるかどうか」が見えなくなる。
+     */
+    .roster { font-size: 13.5px; white-space: normal; }
+    .roster th { padding-right: 10px; }
+    .roster td { padding: 9px 10px 9px 0; overflow-wrap: anywhere; }
+    .roster td:last-child { min-width: 0; }
 }
 
 /* ================================================================ フッター */
@@ -553,24 +569,53 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
 }
 
 @media (max-width: 620px) {
-    .site-header, .site-header.is-stuck { padding: 11px 16px; }
+    /*
+     * ヘッダーはロゴ + マップだけに絞る。
+     * 4項目を横1列に収めようとすると 390px 幅では各項目が2行に折り返し、
+     * ヘッダーが二段になって崩れる。ギャラリー・参加については同じページの
+     * 見出しであり、ヒーローのボタンと下スクロールで届くので header からは外す。
+     */
+    .site-header, .site-header.is-stuck { padding: 10px 14px; }
+    .brand { gap: 9px; }
+    .brand-mark { width: 26px; height: 26px; font-size: 16px; border-radius: 7px; }
     .brand-name { font-size: 15px; }
-    .nav a { padding: 8px 10px; font-size: 13px; }
-    .nav .nav-cta { padding: 9px 13px; }
+
+    .nav { gap: 2px; }
+    .nav a[href*="#gallery"], .nav a[href*="#join"] { display: none; }
+    .nav a { padding: 7px 10px; font-size: 13px; }
+    .nav .nav-cta { padding: 8px 12px; gap: 6px; }
 
     /* 数値カードを1枚に減らしたぶん、ヒーローを低くして
        横長写真の切り落とされる幅を減らす */
-    .hero    { padding: 96px 18px 72px; min-height: 82svh; }
+    .hero    { padding: 88px 18px 72px; min-height: 82svh; }
     .section { padding: 72px 18px; }
 
     /* 縦向き用の画像は太陽が中心に来るよう組んであり、
        画面と同じ縦横比(約0.56)で書き出しているのでそのまま中央に置く */
     .hero-bg img { object-position: center; }
 
-    .hero-actions .btn { flex: 1 1 100%; justify-content: center; }
-    .hero-actions { margin-bottom: 34px; }
-    .stat { padding: 13px 18px 11px; }
+    /*
+     * ボタンは主役の1つだけ全幅にし、残りは2列に並べる。
+     * 3つとも全幅にすると縦に 170px 使ってしまい、写真も見出しも押し出される。
+     */
+    .hero-actions { gap: 9px; margin-bottom: 30px; }
+    .hero-actions .btn {
+        flex: 1 1 calc(50% - 4.5px);
+        justify-content: center;
+        min-height: 44px;
+        padding: 11px 16px;
+        font-size: 14px;
+        border-radius: 11px;
+    }
+    .hero-actions .btn-primary { flex-basis: 100%; min-height: 48px; font-size: 15px; }
+
+    .stat { padding: 12px 17px 10px; }
     .shots { grid-template-columns: 1fr; }
     .lightbox { padding: 14px; }
     .site-footer { padding: 36px 18px 52px; }
+}
+
+/* 極小画面。ロゴの文字まで入れると溢れるので蟲マークだけにする。 */
+@media (max-width: 360px) {
+    .brand-name { display: none; }
 }
