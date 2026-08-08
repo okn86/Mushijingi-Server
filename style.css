@@ -307,6 +307,65 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
     html { scroll-behavior: auto; }
 }
 
+/* ============================================================== ギャラリー */
+
+.shots {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(258px, 1fr));
+    gap: 14px;
+}
+
+.shot {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #0e0e11;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+}
+.shot.wide { grid-column: span 2; }
+
+.shot img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    cursor: zoom-in;
+    transition: transform .5s cubic-bezier(.22,.8,.3,1), filter .3s;
+}
+.shot:hover img { transform: scale(1.05); filter: brightness(1.08); }
+
+/* ============================================================== 拡大表示 */
+
+.lightbox {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    padding: 28px;
+    background: rgba(6, 6, 8, .94);
+    backdrop-filter: blur(10px);
+    animation: fade .2s ease;
+    cursor: zoom-out;
+}
+.lightbox[hidden] { display: none; }
+@keyframes fade { from { opacity: 0 } to { opacity: 1 } }
+
+.lightbox img {
+    max-width: 100%; max-height: 100%;
+    border-radius: 5px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, .7);
+}
+
+.lightbox-close {
+    position: absolute; top: 16px; right: 18px;
+    width: 44px; height: 44px;
+    font-size: 24px; line-height: 1;
+    color: rgba(255, 255, 255, .7);
+    background: rgba(255, 255, 255, .07);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    cursor: pointer;
+}
+.lightbox-close:hover { color: #fff; background: rgba(255, 255, 255, .15); }
+
 /* ================================================================== マップ */
 
 /* 実際の地図を切り出した画像を主役にする。
@@ -380,6 +439,101 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
     border-radius: 0 12px 12px 0;
 }
 
+/* ================================================================== 名簿 */
+
+/* 下層ページはヒーローが無いので、固定ヘッダーのぶん本文を下げる */
+.page main.section { padding-top: 108px; }
+
+.roster-search {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 0 40px;
+    padding: 11px 15px;
+    font: inherit;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    outline: none;
+}
+.roster-search:focus { border-color: rgba(0, 229, 160, .55); }
+.roster-search::placeholder { color: var(--dim); }
+
+.roster-block { margin-bottom: 52px; }
+.roster-block.is-empty .roster-scroll { display: none; }
+
+.roster-block h3 {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 0 0 16px;
+    padding-bottom: 12px;
+    font-size: 19px;
+    font-weight: 800;
+    border-bottom: 1px solid var(--line);
+}
+
+.roster-count {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--dim);
+    font-variant-numeric: tabular-nums;
+}
+
+.roster-empty { margin: 0; font-size: 14.5px; color: var(--dim); }
+
+/* 幅の広い表は、ページ本体ではなく表だけを横スクロールさせる */
+.roster-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+.roster {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14.5px;
+    white-space: nowrap;
+}
+
+.roster th {
+    padding: 8px 14px 8px 0;
+    font-size: 11.5px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-align: left;
+    color: var(--dim);
+    border-bottom: 1px solid var(--line);
+}
+
+.roster td {
+    padding: 10px 14px 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .05);
+    vertical-align: top;
+}
+.roster tbody tr:hover td { background: rgba(255, 255, 255, .03); }
+.roster tr.is-dead td { color: var(--dim); }
+.roster tr.is-dead b { font-weight: 600; }
+.roster td:last-child { white-space: normal; min-width: 14ch; }
+
+.col-state { width: 1%; }
+
+.chip {
+    display: inline-block;
+    padding: 1px 8px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .03em;
+    border-radius: 999px;
+}
+.chip-live  { color: #6ee7b7; background: rgba(0, 229, 160, .13); }
+.chip-dead  { color: #fca5a5; background: rgba(239, 68, 68, .14); }
+.chip-owner { color: #04120c; background: var(--accent); }
+.chip-date  { font-size: 11.5px; color: var(--dim); font-variant-numeric: tabular-nums; }
+
+@media (max-width: 620px) {
+    .page main.section { padding-top: 88px; }
+    .roster-block { margin-bottom: 40px; }
+}
+
 /* ================================================================ フッター */
 
 .site-footer {
@@ -395,6 +549,7 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
 
 @media (max-width: 860px) {
     .dims { gap: 22px; }
+    .shot.wide { grid-column: span 1; }
 }
 
 @media (max-width: 620px) {
@@ -415,5 +570,7 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
     .hero-actions .btn { flex: 1 1 100%; justify-content: center; }
     .hero-actions { margin-bottom: 34px; }
     .stat { padding: 13px 18px 11px; }
+    .shots { grid-template-columns: 1fr; }
+    .lightbox { padding: 14px; }
     .site-footer { padding: 36px 18px 52px; }
 }

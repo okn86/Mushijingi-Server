@@ -17,7 +17,7 @@
 <meta property="og:image" content="img/hero.jpg">
 <meta property="og:type" content="website">
 
-<link rel="stylesheet" href="style.css?v=25e42f1784">
+<link rel="stylesheet" href="style.css?v=452fe5fd15">
 <link rel="preload" as="font" type="font/woff2" href="fonts/shippori-mincho-b1-800-subset.woff2" crossorigin>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2300e5a0'/><path d='M16 6l3 5h-6zM9 13h14l-2 4H11zM11 19h10l-3 7h-4z' fill='%230a0a0c'/></svg>">
 </head>
@@ -30,7 +30,9 @@
         <span class="brand-name">蟲神器サーバー</span>
     </a>
     <nav class="nav">
+        <a href="#gallery">ギャラリー</a>
         <a href="#join">参加について</a>
+        <a href="roster.html">名簿</a>
         <a class="nav-cta" href="map/">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M9 4L3 7v13l6-3 6 3 6-3V4l-6 3-6-3z"/><path d="M9 4v13M15 7v13"/></svg>
             マップ
@@ -66,7 +68,8 @@
                     ワールドマップを開く
                     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </a>
-                <a class="btn btn-glass" href="#join">参加について</a>
+                <a class="btn btn-glass" href="#gallery">写真を見る</a>
+                <a class="btn btn-glass" href="roster.html">名簿</a>
             </div>
 
             <!-- 実際のワールドデータから算出した数字 -->
@@ -75,9 +78,37 @@
             </div>
         </div>
 
-        <a class="scroll-hint" href="#map" aria-label="下へ">
+        <a class="scroll-hint" href="#gallery" aria-label="下へ">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
         </a>
+    </section>
+
+    <!-- ================================ ギャラリー ================================ -->
+    <section id="gallery" class="section">
+        <div class="lede reveal">
+            <h2>ギャラリー</h2>
+            <p>プレイヤーが作り上げてきた建築の記録。写真をタップすると拡大表示されます。</p>
+        </div>
+
+        <!-- 写真を増やすときは img\ に追加して figure を複製する。
+             wide を付けた要素は横2列ぶんの幅で表示される。 -->
+        <div class="shots">
+            <figure class="shot reveal wide"><img src="img/shot01.jpg" alt="ガラス張りの超高層ビル" loading="lazy"></figure>
+            <figure class="shot reveal"><img src="img/shot02.jpg" alt="赤い鳥居の参道" loading="lazy"></figure>
+            <figure class="shot reveal"><img src="img/shot03.jpg" alt="夕暮れの街の全景" loading="lazy"></figure>
+            <figure class="shot reveal"><img src="img/shot04.jpg" alt="夜の吊り橋と街の灯り" loading="lazy"></figure>
+            <figure class="shot reveal"><img src="img/shot15.jpg" alt="夜の駅のホーム" loading="lazy"></figure>
+            <figure class="shot reveal"><img src="img/shot05.jpg" alt="木造の洋館" loading="lazy"></figure>
+            <figure class="shot reveal wide"><img src="img/shot06.jpg" alt="駅前と川沿いの市街地" loading="lazy"></figure>
+            <figure class="shot reveal"><img src="img/shot07.jpg" alt="月夜の吊り橋" loading="lazy"></figure>
+            <figure class="shot reveal"><img src="img/shot08.jpg" alt="高層ビル群" loading="lazy"></figure>
+            <figure class="shot reveal"><img src="img/shot09.jpg" alt="商業ビルの正面" loading="lazy"></figure>
+            <figure class="shot reveal"><img src="img/shot10.jpg" alt="庭園のある洋風建築" loading="lazy"></figure>
+            <figure class="shot reveal wide"><img src="img/shot11.jpg" alt="湖畔の街並み" loading="lazy"></figure>
+            <figure class="shot reveal"><img src="img/shot12.jpg" alt="夜の広場" loading="lazy"></figure>
+            <figure class="shot reveal"><img src="img/shot13.jpg" alt="商店の並ぶ街路" loading="lazy"></figure>
+            <figure class="shot reveal"><img src="img/shot14.jpg" alt="施設のホール" loading="lazy"></figure>
+        </div>
     </section>
 
     <!-- ================================ マップ ================================ -->
@@ -156,6 +187,12 @@
     <p class="footer-note">マップは uNmINeD で生成しています。ワールドの更新に合わせて随時反映されます。</p>
 </footer>
 
+<!-- 写真の拡大表示 -->
+<div class="lightbox" id="lightbox" hidden>
+    <button class="lightbox-close" aria-label="閉じる">×</button>
+    <img alt="">
+</div>
+
 <script>
 (function () {
     'use strict';
@@ -184,6 +221,31 @@
         targets.forEach(function (t) { t.classList.add('is-in'); });
     }
 
+    // 写真の拡大表示
+    var box = document.getElementById('lightbox');
+    var boxImg = box.querySelector('img');
+
+    function closeBox() {
+        box.hidden = true;
+        document.body.style.overflow = '';
+        boxImg.removeAttribute('src');
+    }
+
+    document.querySelectorAll('.shot img').forEach(function (img) {
+        img.addEventListener('click', function () {
+            boxImg.src = img.getAttribute('src');
+            boxImg.alt = img.alt;
+            box.hidden = false;
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    box.addEventListener('click', function (e) {
+        if (e.target === box || e.target.classList.contains('lightbox-close')) closeBox();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !box.hidden) closeBox();
+    });
 })();
 </script>
 
