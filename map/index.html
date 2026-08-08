@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>ワールドマップ</title>
+<style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0; min-height: 100vh; padding: 32px 20px 48px;
+        display: flex; flex-direction: column; align-items: center;
+        font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+        line-height: 1.7; color: #f2f2f3; background: #131316;
+    }
+    .back {
+        align-self: flex-start; display: inline-flex; align-items: center; gap: 7px;
+        margin-bottom: 34px; padding: 8px 14px 8px 11px;
+        font-size: 13.5px; font-weight: 600; text-decoration: none;
+        color: rgba(255,255,255,.62);
+        border: 1px solid rgba(255,255,255,.12); border-radius: 9px;
+    }
+    .back:hover { color: #f2f2f3; background: rgba(255,255,255,.07); }
+    h1 { margin: 0 0 6px; font-size: 26px; }
+    .lead { margin: 0 0 34px; font-size: 14.5px; color: rgba(255,255,255,.55); text-align: center; }
+    .cards {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 16px; width: 100%; max-width: 860px;
+    }
+    .card {
+        display: block; padding: 24px 22px; text-decoration: none; color: inherit;
+        background: #1c1c21; border: 1px solid rgba(255,255,255,.11); border-radius: 15px;
+        border-top: 3px solid var(--c);
+        transition: background .15s, transform .1s;
+    }
+    .card:hover { background: #24242b; }
+    .card:active { transform: translateY(1px); }
+    .card h2 { margin: 0 0 7px; font-size: 18px; }
+    .card-desc { margin: 0 0 12px; font-size: 14px; color: rgba(255,255,255,.58); }
+    .card-meta { margin: 0; font-size: 12px; color: rgba(255,255,255,.34); font-variant-numeric: tabular-nums; }
+    @media (max-width: 620px) { body { padding: 20px 16px 40px; } .back { margin-bottom: 24px; } }
+</style>
+</head>
+<body>
+    <a class="back" href="../">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        サイトに戻る
+    </a>
+    <h1>ワールドマップ</h1>
+    <p class="lead">見たいディメンションを選んでください。</p>
+    <div class="cards">
+        <a class="card" href="overworld/" style="--c:#5cc46b">
+            <h2>オーバーワールド</h2>
+            <p class="card-desc">地上の世界。探索済みエリアの全景。</p>
+            <p class="card-meta">35439 タイル / 91.9 MB</p>
+        </a>
+        <a class="card" href="nether/" style="--c:#e8663d">
+            <h2>ネザー</h2>
+            <p class="card-desc">岩盤の天井を外し、溶岩や森が見える高さで描画。</p>
+            <p class="card-meta">1072 タイル / 4.9 MB</p>
+        </a>
+        <a class="card" href="end/" style="--c:#b06ee8">
+            <h2>エンド</h2>
+            <p class="card-desc">果ての世界と外周の島々。</p>
+            <p class="card-meta">6379 タイル / 10.3 MB</p>
+        </a>
+    </div>
+</body>
+</html>

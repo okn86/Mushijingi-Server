@@ -1,0 +1,293 @@
+/* guide.css - 案内マップ機能（ピンのポップアップと地点一覧）のスタイル。
+   スマホでの片手操作を前提に、タップ対象を 44px 以上確保している。 */
+
+.guide-popup,
+.guide-panel,
+.guide-toggle {
+    font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    color: #f2f2f3;
+    box-sizing: border-box;
+}
+
+.guide-popup *,
+.guide-panel * { box-sizing: border-box; }
+
+/* ---------------------------------------------------------- ポップアップ */
+
+.guide-popup {
+    position: relative;
+    min-width: 200px;
+    max-width: min(300px, calc(100vw - 32px));
+    padding: 14px 16px 12px;
+    background: rgba(24, 24, 27, .96);
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 12px;
+    box-shadow: 0 10px 32px rgba(0, 0, 0, .5);
+    backdrop-filter: blur(8px);
+}
+
+/* 吹き出しの尻尾 */
+.guide-popup::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -8px;
+    width: 14px;
+    height: 14px;
+    margin-left: -7px;
+    background: rgba(24, 24, 27, .96);
+    border-right: 1px solid rgba(255, 255, 255, .14);
+    border-bottom: 1px solid rgba(255, 255, 255, .14);
+    transform: rotate(45deg);
+}
+
+.guide-popup-close {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    font-size: 20px;
+    line-height: 1;
+    color: rgba(255, 255, 255, .55);
+    background: none;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.guide-popup-close:hover { color: #fff; background: rgba(255, 255, 255, .1); }
+
+.guide-chip {
+    display: inline-block;
+    margin-bottom: 6px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    color: #fff;
+    border-radius: 999px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+}
+
+.guide-popup-title {
+    padding-right: 28px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.guide-popup-desc {
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, .78);
+    white-space: pre-wrap;
+}
+
+.guide-popup-coords {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+    padding-top: 9px;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    color: rgba(255, 255, 255, .62);
+    border-top: 1px solid rgba(255, 255, 255, .1);
+}
+
+.guide-copy {
+    flex: none;
+    min-height: 30px;
+    padding: 5px 11px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #f2f2f3;
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 7px;
+    cursor: pointer;
+}
+.guide-copy:hover { background: rgba(255, 255, 255, .17); }
+
+/* ------------------------------------------------------------ 一覧パネル */
+
+.guide-toggle {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    color: #f2f2f3;
+    background: rgba(24, 24, 27, .92);
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
+    cursor: pointer;
+}
+.guide-toggle:hover { background: rgba(40, 40, 45, .95); }
+.guide-toggle.is-open { color: #ffb38a; border-color: rgba(255, 150, 90, .5); }
+
+/* 一覧ボタンの左隣。OpenLayers のズームコントロール（左上）を避けている。 */
+.guide-back {
+    position: absolute;
+    top: 12px;
+    right: 66px;
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 46px;
+    padding: 0 14px 0 11px;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #f2f2f3;
+    background: rgba(24, 24, 27, .92);
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
+}
+.guide-back:hover { background: rgba(40, 40, 45, .95); }
+
+.guide-panel {
+    position: absolute;
+    top: 68px;
+    right: 12px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    max-width: calc(100vw - 24px);
+    max-height: min(560px, calc(100vh - 96px));
+    background: rgba(24, 24, 27, .96);
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 14px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, .55);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+}
+.guide-panel.is-hidden { display: none; }
+
+.guide-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 8px 10px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+
+.guide-panel-title { font-size: 14px; font-weight: 700; }
+
+.guide-panel-close {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    font-size: 20px;
+    line-height: 1;
+    color: rgba(255, 255, 255, .55);
+    background: none;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.guide-panel-close:hover { color: #fff; background: rgba(255, 255, 255, .1); }
+
+.guide-search {
+    margin: 10px 12px;
+    padding: 9px 12px;
+    font-size: 14px;       /* iOS のフォーカス時ズームを防ぐため 16px 未満にしない場合は要注意 */
+    color: #f2f2f3;
+    background: rgba(255, 255, 255, .07);
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 9px;
+    outline: none;
+}
+.guide-search:focus { border-color: rgba(255, 150, 90, .55); }
+.guide-search::placeholder { color: rgba(255, 255, 255, .4); }
+
+.guide-list {
+    flex: 1;
+    padding: 0 8px 10px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.guide-list-item {
+    display: flex;
+    gap: 11px;
+    align-items: center;
+    width: 100%;
+    min-height: 48px;
+    padding: 9px 10px;
+    text-align: left;
+    color: inherit;
+    background: none;
+    border: 0;
+    border-radius: 9px;
+    cursor: pointer;
+}
+.guide-list-item:hover { background: rgba(255, 255, 255, .08); }
+
+.guide-dot {
+    flex: none;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, .35);
+}
+
+.guide-list-body { min-width: 0; }
+
+.guide-list-name {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.35;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.guide-list-meta {
+    margin-top: 2px;
+    font-size: 11.5px;
+    font-variant-numeric: tabular-nums;
+    color: rgba(255, 255, 255, .5);
+}
+
+.guide-empty {
+    padding: 22px 12px;
+    font-size: 13px;
+    text-align: center;
+    color: rgba(255, 255, 255, .45);
+}
+
+/* --------------------------------------------------------------- スマホ */
+
+@media (max-width: 640px) {
+    /* 一覧は下からのシートにする（親指が届く位置） */
+    .guide-panel {
+        top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: auto;
+        max-width: none;
+        max-height: 62vh;
+        border-radius: 16px 16px 0 0;
+        border-bottom: 0;
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    .guide-search { font-size: 16px; }  /* iOS Safari の自動ズーム防止 */
+    .guide-popup { max-width: calc(100vw - 24px); }
+
+    /* 狭い画面では戻るボタンのラベルを畳んでアイコンだけにする */
+    .guide-back { padding: 0; width: 46px; justify-content: center; gap: 0; font-size: 0; }
+    .guide-back svg { flex: none; }
+}
