@@ -45,7 +45,7 @@ UnminedGuideLocations = {
         { name: "Awesom建築事務所", x: -1048, z: 497, category: "build", dimension: "overworld" },
         { name: "三内丸山遺跡", x: -1053, z: 542, category: "structure", dimension: "overworld" },
         { name: "Awesome Cube", x: -1089, z: 548, category: "build", dimension: "overworld" },
-        { name: "いさばちハウス", x: -989, z: 468, category: "build", dimension: "overworld" },
+        { name: "いさばちさくらハウス", x: -989, z: 468, category: "build", dimension: "overworld" },
         { name: "べんぱく", x: -922, z: 403, category: "build", dimension: "overworld" },
         { name: "歴史文化遺産管理センター", x: -1025, z: 375, category: "public", dimension: "overworld" },
         { name: "ウヌバ城", x: -1003, z: 369, category: "structure", dimension: "overworld" },
