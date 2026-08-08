@@ -437,7 +437,10 @@
             var coords = el('div', 'guide-popup-coords');
             coords.appendChild(el('span', null, kind === 'area'
                 ? '中心 X ' + a[0] + '  Z ' + a[1] + '  （' + item.points.length + '頂点）'
-                : 'X ' + item.x + '  Z ' + item.z + (item.y != null ? '  Y ' + item.y : '')));
+                // Minecraft の座標表記に合わせて X Y Z の順。Y が無いときは X Z。
+                : (item.y != null
+                    ? 'X ' + item.x + '  Y ' + item.y + '  Z ' + item.z
+                    : 'X ' + item.x + '  Z ' + item.z)));
 
             var copy = el('button', 'guide-copy', 'コピー');
             copy.onclick = function () {
