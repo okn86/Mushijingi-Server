@@ -1,7 +1,7 @@
 /* 自動生成。編集しても render-map.ps1 の実行で上書きされる。
    地点は guide.locations.csv、範囲は guide.areas.csv、
    カテゴリは guide.categories.csv を編集すること。
-   生成元: 地点 47 件 / 範囲 1 件 / カテゴリ 15 件 */
+   生成元: 地点 57 件 / 範囲 1 件 / カテゴリ 15 件 */
 
 UnminedGuideLocations = {
 
@@ -70,7 +70,17 @@ UnminedGuideLocations = {
         { name: "地下遺跡", x: -1066, z: 771, category: "structure", dimension: "overworld" },
         { name: "オサムガーデン別館", x: -789, z: 361, category: "build", dimension: "overworld" },
         { name: "A.Nether Fort", x: -808, z: 303, category: "build", dimension: "overworld" },
-        { name: "Awesome farming house", x: -726, z: 259, category: "build", dimension: "overworld", description: "特別協賛:内永建設銀行" }
+        { name: "Awesome farming house", x: -726, z: 259, category: "build", dimension: "overworld", description: "特別協賛:内永建設銀行" },
+        { name: "沈没船駅", x: -271, z: 450, category: "station", dimension: "overworld" },
+        { name: "天空トラップタワー", x: -1808, z: 431, category: "mobfarm", dimension: "overworld" },
+        { name: "モブ収容施設", x: -893, z: 86, category: "public", dimension: "overworld" },
+        { name: "とんがった鼻くそ", x: -1291, z: 690, category: "structure", dimension: "overworld" },
+        { name: "天空トラップタワー前駅", x: -1803, z: 451, category: "station", dimension: "overworld" },
+        { name: "マハル沙汰駅", x: -2207, z: 454, category: "station", dimension: "overworld" },
+        { name: "墓地", x: -2294, z: 617, category: "structure", dimension: "overworld" },
+        { name: "古代遺跡発掘駅", x: -4680, z: 450, category: "station", dimension: "overworld" },
+        { name: "作りかけ駅", x: -5988, z: 450, category: "station", dimension: "overworld" },
+        { name: "最古の住民看板", x: -981, z: 373, category: "structure", dimension: "overworld" }
     ],
 
     areas: [
