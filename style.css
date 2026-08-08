@@ -1,5 +1,20 @@
 /* 蟲神器サーバー 紹介サイト */
 
+/*
+ * サーバー名だけに使う見出し用書体。
+ * Shippori Mincho B1 (SIL Open Font License 1.1) を
+ * 「蟲神器サーバー」の字形だけに絞って自前配信している（3.4KB）。
+ * 使う文字を増やす場合はサブセットを作り直すこと。
+ */
+@font-face {
+    font-family: 'Shippori Mincho B1';
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url('fonts/shippori-mincho-b1-800-subset.woff2') format('woff2');
+    unicode-range: U+3099, U+30b5-30b6, U+30cf-30d0, U+30fc, U+5668, U+795e, U+87f2;
+}
+
 :root {
     color-scheme: dark;
     --bg:      #0a0a0c;
@@ -58,13 +73,19 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
 .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; color: var(--text); }
 
 .brand-mark {
-    width: 26px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px;
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: 17px; font-weight: 800; line-height: 1;
+    color: #04120c;
     border-radius: 8px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2) 55%, var(--accent-3));
-    box-shadow: 0 0 18px rgba(0, 229, 160, .5), inset 0 0 0 1px rgba(255, 255, 255, .3);
+    background: linear-gradient(140deg, var(--accent), #34d399 70%, var(--accent-2));
 }
 
-.brand-name { font-size: 16px; font-weight: 800; letter-spacing: .02em; }
+.brand-name {
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: 17px; font-weight: 800; letter-spacing: .04em;
+}
 
 .nav { display: flex; align-items: center; gap: 4px; }
 
@@ -112,12 +133,13 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
     to   { transform: scale(1.14) translate3d(-1.4%, -1.6%, 0); }
 }
 
-/* 写真の上に暗幕。下に行くほど濃くして本文へ繋げる */
+/* 写真の上の暗幕。文字が乗る上下だけ締めて、真ん中は写真を見せる。
+   2枚重ねると不透明度が乗算で効くので、控えめな値でも十分暗くなる。 */
 .hero-veil {
     position: absolute; inset: 0; z-index: 1;
     background:
-        linear-gradient(to bottom, rgba(10,10,12,.78) 0%, rgba(10,10,12,.42) 34%, rgba(10,10,12,.86) 82%, var(--bg) 100%),
-        linear-gradient(105deg, rgba(10,10,12,.8) 0%, rgba(10,10,12,.15) 62%);
+        linear-gradient(to bottom, rgba(10,10,12,.5) 0%, rgba(10,10,12,.05) 30%, rgba(10,10,12,.5) 76%, var(--bg) 100%),
+        linear-gradient(100deg, rgba(10,10,12,.5) 0%, rgba(10,10,12,0) 58%);
 }
 
 .hero-glow {
@@ -139,9 +161,9 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
     margin: 0 0 22px;
     padding: 7px 16px 7px 13px;
     font-size: 12.5px; font-weight: 800; letter-spacing: .1em;
-    color: rgba(255, 255, 255, .82);
-    background: rgba(255, 255, 255, .07);
-    border: 1px solid rgba(255, 255, 255, .16);
+    color: rgba(255, 255, 255, .9);
+    background: rgba(10, 10, 12, .42);
+    border: 1px solid rgba(255, 255, 255, .18);
     border-radius: 999px;
     backdrop-filter: blur(10px);
 }
@@ -153,20 +175,30 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
 }
 @keyframes blink { 0%,100% { opacity:1 } 50% { opacity:.35 } }
 
-.hero-title { margin: 0 0 20px; font-size: clamp(46px, 11vw, 116px); font-weight: 900; letter-spacing: -.03em; }
+.hero-title {
+    margin: 0 0 20px;
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: clamp(46px, 10.5vw, 108px);
+    font-weight: 800;
+    letter-spacing: .01em;
+    /* 暗幕を薄くしたぶん、文字側で読みやすさを担保する */
+    text-shadow: 0 2px 26px rgba(0, 0, 0, .75), 0 1px 3px rgba(0, 0, 0, .6);
+}
 .hero-title .line { display: block; }
 .hero-title .grad {
-    background: linear-gradient(100deg, var(--accent) 0%, var(--accent-2) 48%, var(--accent-3) 100%);
+    background: linear-gradient(100deg, var(--accent) 0%, var(--accent-2) 52%, var(--accent-3) 100%);
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent; color: transparent;
+    /* グラデーション文字には text-shadow が乗らないので、代わりに影を落とす */
+    filter: drop-shadow(0 2px 18px rgba(0, 0, 0, .6));
 }
 
 .hero-lead {
     max-width: 40ch;
     margin: 0 0 38px;
     font-size: clamp(16px, 2.1vw, 20px);
-    color: rgba(255, 255, 255, .82);
-    text-shadow: 0 2px 18px rgba(0, 0, 0, .6);
+    color: rgba(255, 255, 255, .88);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, .75), 0 2px 20px rgba(0, 0, 0, .6);
 }
 
 .hero-actions { display: flex; flex-wrap: wrap; gap: 13px; margin-bottom: 56px; }
@@ -175,8 +207,8 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
 
 .stat {
     padding: 15px 24px 13px;
-    background: rgba(255, 255, 255, .055);
-    border: 1px solid rgba(255, 255, 255, .13);
+    background: rgba(10, 10, 12, .42);
+    border: 1px solid rgba(255, 255, 255, .16);
     border-radius: 14px;
     backdrop-filter: blur(14px);
 }
@@ -232,21 +264,21 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
 
 /* ================================================================== 共通 */
 
-.section { max-width: var(--page); margin: 0 auto; padding: 104px 26px; }
+.section { max-width: var(--page); margin: 0 auto; padding: 96px 26px; }
 
-.section-head { margin-bottom: 46px; }
+/* 見出しと導入文。飾りを足さず、字組みだけで見出しを立てる。 */
+.lede { max-width: 60ch; margin-bottom: 44px; }
 
-.kicker {
-    display: block; margin-bottom: 12px;
-    font-size: 12px; font-weight: 900; letter-spacing: .22em; text-transform: uppercase;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    -webkit-background-clip: text; background-clip: text;
-    -webkit-text-fill-color: transparent; color: transparent;
+.lede h2 {
+    margin: 0 0 14px;
+    padding-bottom: 14px;
+    font-size: clamp(25px, 3.8vw, 34px);
+    font-weight: 800;
+    letter-spacing: .01em;
+    border-bottom: 1px solid var(--line);
 }
 
-.section-title { margin: 0 0 14px; font-size: clamp(28px, 4.6vw, 42px); font-weight: 900; }
-
-.section-lead { max-width: 62ch; margin: 0; font-size: 16px; color: var(--muted); }
+.lede p { margin: 0; font-size: 15.5px; color: var(--muted); }
 
 .reveal {
     opacity: 0;
@@ -263,45 +295,44 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
 
 /* ================================================================== マップ */
 
-.promo {
-    position: relative;
+/* 実際の地図を切り出した画像を主役にする。
+   色付きの飾り罫やグローは使わない。 */
+.dims {
     display: grid;
-    grid-template-columns: 1.25fr .95fr;
-    gap: 40px;
-    padding: 52px 46px;
-    background: linear-gradient(150deg, #16161c, #101014);
-    border: 1px solid var(--line);
-    border-radius: 24px;
-    overflow: hidden;
+    grid-template-columns: repeat(auto-fit, minmax(258px, 1fr));
+    gap: 20px;
 }
 
-.promo-glow {
-    position: absolute; top: -45%; right: -14%;
-    width: 620px; aspect-ratio: 1;
-    background: radial-gradient(circle, rgba(56,189,248,.24), rgba(192,132,252,.12) 44%, transparent 68%);
-    filter: blur(26px);
-    pointer-events: none;
-}
+.dim { display: block; text-decoration: none; color: inherit; }
 
-.promo-body { position: relative; }
-.promo-body h2 { margin: 0 0 14px; font-size: clamp(24px, 3.4vw, 34px); font-weight: 900; }
-.promo-body p  { margin: 0 0 30px; color: var(--muted); }
-
-.promo-dims { position: relative; display: flex; flex-direction: column; gap: 11px; }
-
-.dim {
+.dim-shot {
     display: block;
-    padding: 16px 20px;
-    text-decoration: none; color: inherit;
-    background: rgba(255, 255, 255, .04);
+    aspect-ratio: 4 / 3;
+    margin-bottom: 14px;
+    overflow: hidden;
+    background: #0e0e11;
     border: 1px solid var(--line);
-    border-left: 3px solid var(--c);
-    border-radius: 13px;
-    transition: background .2s, transform .2s;
+    border-radius: 5px;
 }
-.dim:hover { background: rgba(255, 255, 255, .09); transform: translateX(5px); }
-.dim b    { display: block; font-size: 15.5px; font-weight: 800; }
-.dim span { font-size: 12.5px; color: var(--dim); }
+
+.dim-shot img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    image-rendering: pixelated;      /* 地図タイルなので補間せずドット感を残す */
+    transition: transform .5s cubic-bezier(.22,.8,.3,1), filter .3s;
+}
+.dim:hover .dim-shot img { transform: scale(1.05); filter: brightness(1.08); }
+
+.dim-body { display: block; }
+
+.dim b {
+    display: block;
+    font-size: 16px; font-weight: 700; letter-spacing: .01em;
+    transition: color .18s;
+}
+.dim:hover b { color: var(--accent); }
+
+.dim-note { display: block; margin-top: 3px; font-size: 13px; color: var(--dim); }
 
 /* ============================================================ 参加について */
 
@@ -313,13 +344,11 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
 }
 
 .field {
-    padding: 22px 24px;
+    padding: 20px 22px;
     background: var(--card);
     border: 1px solid var(--line);
-    border-radius: 16px;
-    transition: border-color .25s, transform .25s;
+    border-radius: 5px;
 }
-.field:hover { border-color: rgba(0, 229, 160, .4); transform: translateY(-3px); }
 
 .field-label {
     display: block; margin-bottom: 8px;
@@ -351,7 +380,7 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
 /* ================================================================== スマホ */
 
 @media (max-width: 860px) {
-    .promo { grid-template-columns: 1fr; gap: 30px; padding: 38px 26px; }
+    .dims { gap: 22px; }
 }
 
 @media (max-width: 620px) {

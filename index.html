@@ -18,7 +18,7 @@
 <meta property="og:type" content="website">
 
 <link rel="stylesheet" href="style.css">
-<link rel="preload" as="image" href="img/hero.jpg">
+<link rel="preload" as="font" type="font/woff2" href="fonts/shippori-mincho-b1-800-subset.woff2" crossorigin>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2300e5a0'/><path d='M16 6l3 5h-6zM9 13h14l-2 4H11zM11 19h10l-3 7h-4z' fill='%230a0a0c'/></svg>">
 </head>
 
@@ -26,7 +26,7 @@
 
 <header class="site-header" id="header">
     <a class="brand" href="#top">
-        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">蟲</span>
         <span class="brand-name">蟲神器サーバー</span>
     </a>
     <nav class="nav">
@@ -82,35 +82,44 @@
 
     <!-- ================================ マップ ================================ -->
     <section id="map" class="section">
-        <div class="promo reveal">
-            <div class="promo-glow" aria-hidden="true"></div>
-            <div class="promo-body">
-                <span class="kicker">World Map</span>
-                <h2>ワールドの全体像</h2>
-                <p>
-                    オーバーワールド・ネザー・エンドの3つを収録。
-                    拡大縮小しながら探索の記録を辿れます。
-                    ピンをタップすると拠点や施設の名前が表示されます。
-                </p>
-                <a class="btn btn-primary" href="map/">
-                    マップを開く
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </a>
-            </div>
-            <div class="promo-dims">
-                <a class="dim" href="map/overworld/" style="--c:#4ade80"><b>オーバーワールド</b><span>地上の世界</span></a>
-                <a class="dim" href="map/nether/" style="--c:#f87171"><b>ネザー</b><span>岩盤の天井を外して描画</span></a>
-                <a class="dim" href="map/end/" style="--c:#c084fc"><b>エンド</b><span>果ての世界</span></a>
-            </div>
+        <div class="lede reveal">
+            <h2>ワールドマップ</h2>
+            <p>
+                探索済みの地形をそのまま書き出しています。拡大縮小して辿れるほか、
+                登録された地点をタップすると名前と座標が表示されます。
+            </p>
+        </div>
+
+        <div class="dims">
+            <a class="dim reveal" href="map/overworld/">
+                <span class="dim-shot"><img src="img/map-overworld.jpg" alt="" loading="lazy"></span>
+                <span class="dim-body">
+                    <b>オーバーワールド</b>
+                    <span class="dim-note">地上の世界</span>
+                </span>
+            </a>
+            <a class="dim reveal" href="map/nether/">
+                <span class="dim-shot"><img src="img/map-nether.jpg" alt="" loading="lazy"></span>
+                <span class="dim-body">
+                    <b>ネザー</b>
+                    <span class="dim-note">岩盤の天井を外して描画</span>
+                </span>
+            </a>
+            <a class="dim reveal" href="map/end/">
+                <span class="dim-shot"><img src="img/map-end.jpg" alt="" loading="lazy"></span>
+                <span class="dim-body">
+                    <b>エンド</b>
+                    <span class="dim-note">果ての世界</span>
+                </span>
+            </a>
         </div>
     </section>
 
     <!-- ================================ 参加について ================================ -->
     <section id="join" class="section">
-        <div class="section-head reveal">
-            <span class="kicker">Join</span>
-            <h2 class="section-title">参加について</h2>
-            <p class="section-lead">
+        <div class="lede reveal">
+            <h2>参加について</h2>
+            <p>
                 身内向けのサーバーのため、接続先は公開していません。
                 参加を希望する場合は管理者まで直接お問い合わせください。
             </p>

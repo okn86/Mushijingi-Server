@@ -6,65 +6,92 @@
 <meta name="robots" content="noindex, nofollow">
 <title>ワールドマップ</title>
 <style>
-    :root { color-scheme: dark; }
+    :root { color-scheme: dark; --line: rgba(255,255,255,.1); --dim: rgba(255,255,255,.38); --accent: #00e5a0; }
     * { box-sizing: border-box; }
     body {
-        margin: 0; min-height: 100vh; padding: 32px 20px 48px;
-        display: flex; flex-direction: column; align-items: center;
+        margin: 0; min-height: 100vh; padding: 26px 24px 64px;
         font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
-        line-height: 1.7; color: #f2f2f3; background: #131316;
+        font-size: 16px; line-height: 1.8; color: #f4f4f5; background: #0a0a0c;
+        -webkit-font-smoothing: antialiased;
     }
+    .wrap { max-width: 1000px; margin: 0 auto; }
+    img { display: block; max-width: 100%; }
+
     .back {
-        align-self: flex-start; display: inline-flex; align-items: center; gap: 7px;
-        margin-bottom: 34px; padding: 8px 14px 8px 11px;
-        font-size: 13.5px; font-weight: 600; text-decoration: none;
-        color: rgba(255,255,255,.62);
-        border: 1px solid rgba(255,255,255,.12); border-radius: 9px;
+        display: inline-flex; align-items: center; gap: 7px;
+        margin-bottom: 46px; padding: 7px 13px 7px 10px;
+        font-size: 13px; font-weight: 700; text-decoration: none;
+        color: var(--dim); border: 1px solid var(--line); border-radius: 5px;
     }
-    .back:hover { color: #f2f2f3; background: rgba(255,255,255,.07); }
-    h1 { margin: 0 0 6px; font-size: 26px; }
-    .lead { margin: 0 0 34px; font-size: 14.5px; color: rgba(255,255,255,.55); text-align: center; }
-    .cards {
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-        gap: 16px; width: 100%; max-width: 860px;
+    .back:hover { color: #f4f4f5; background: rgba(255,255,255,.06); }
+
+    h1 {
+        margin: 0 0 14px; padding-bottom: 14px;
+        font-size: clamp(25px, 3.8vw, 34px); font-weight: 800; letter-spacing: .01em;
+        line-height: 1.25; border-bottom: 1px solid var(--line);
     }
-    .card {
-        display: block; padding: 24px 22px; text-decoration: none; color: inherit;
-        background: #1c1c21; border: 1px solid rgba(255,255,255,.11); border-radius: 15px;
-        border-top: 3px solid var(--c);
-        transition: background .15s, transform .1s;
+    .lead { max-width: 60ch; margin: 0 0 44px; font-size: 15.5px; color: rgba(255,255,255,.58); }
+
+    .dims { display: grid; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); gap: 20px; }
+    .dim { display: block; text-decoration: none; color: inherit; }
+    .dim-shot {
+        display: block; aspect-ratio: 4 / 3; margin-bottom: 14px; overflow: hidden;
+        background: #0e0e11; border: 1px solid var(--line); border-radius: 5px;
     }
-    .card:hover { background: #24242b; }
-    .card:active { transform: translateY(1px); }
-    .card h2 { margin: 0 0 7px; font-size: 18px; }
-    .card-desc { margin: 0 0 12px; font-size: 14px; color: rgba(255,255,255,.58); }
-    .card-meta { margin: 0; font-size: 12px; color: rgba(255,255,255,.34); font-variant-numeric: tabular-nums; }
-    @media (max-width: 620px) { body { padding: 20px 16px 40px; } .back { margin-bottom: 24px; } }
+    .dim-shot img {
+        width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated;
+        transition: transform .5s cubic-bezier(.22,.8,.3,1), filter .3s;
+    }
+    .dim:hover .dim-shot img { transform: scale(1.05); filter: brightness(1.08); }
+    .dim b { display: block; font-size: 16px; font-weight: 700; transition: color .18s; }
+    .dim:hover b { color: var(--accent); }
+    .dim-note { display: block; margin-top: 3px; font-size: 13px; color: var(--dim); }
+    .dim-meta {
+        display: block; margin-top: 6px; font-size: 11.5px;
+        color: rgba(255,255,255,.26); font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 620px) {
+        body { padding: 18px 16px 52px; }
+        .back { margin-bottom: 30px; }
+        .lead { margin-bottom: 32px; }
+    }
 </style>
 </head>
 <body>
+<div class="wrap">
     <a class="back" href="../">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
         サイトに戻る
     </a>
     <h1>ワールドマップ</h1>
-    <p class="lead">見たいディメンションを選んでください。</p>
-    <div class="cards">
-        <a class="card" href="overworld/" style="--c:#5cc46b">
-            <h2>オーバーワールド</h2>
-            <p class="card-desc">地上の世界。探索済みエリアの全景。</p>
-            <p class="card-meta">140207 タイル / 212.2 MB</p>
+    <p class="lead">見たいディメンションを選んでください。地点をタップすると名前と座標が表示されます。</p>
+    <div class="dims">
+        <a class="dim" href="overworld/">
+            <span class="dim-shot"><img src="../img/map-overworld.jpg" alt="" loading="lazy"></span>
+            <span class="dim-body">
+                <b>オーバーワールド</b>
+                <span class="dim-note">地上の世界</span>
+                <span class="dim-meta">140,207 タイル · 212.2 MB</span>
+            </span>
         </a>
-        <a class="card" href="nether/" style="--c:#e8663d">
-            <h2>ネザー</h2>
-            <p class="card-desc">岩盤の天井を外し、溶岩や森が見える高さで描画。</p>
-            <p class="card-meta">4144 タイル / 10.4 MB</p>
+        <a class="dim" href="nether/">
+            <span class="dim-shot"><img src="../img/map-nether.jpg" alt="" loading="lazy"></span>
+            <span class="dim-body">
+                <b>ネザー</b>
+                <span class="dim-note">岩盤の天井を外して描画</span>
+                <span class="dim-meta">4,144 タイル · 10.4 MB</span>
+            </span>
         </a>
-        <a class="card" href="end/" style="--c:#b06ee8">
-            <h2>エンド</h2>
-            <p class="card-desc">果ての世界と外周の島々。</p>
-            <p class="card-meta">25131 タイル / 21 MB</p>
+        <a class="dim" href="end/">
+            <span class="dim-shot"><img src="../img/map-end.jpg" alt="" loading="lazy"></span>
+            <span class="dim-body">
+                <b>エンド</b>
+                <span class="dim-note">果ての世界</span>
+                <span class="dim-meta">25,131 タイル · 21 MB</span>
+            </span>
         </a>
     </div>
+</div>
 </body>
 </html>
