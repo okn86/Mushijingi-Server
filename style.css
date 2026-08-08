@@ -99,6 +99,7 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
 }
 
 .hero-bg { position: absolute; inset: 0; z-index: 0; }
+.hero-bg picture { display: contents; }
 .hero-bg img {
     width: 100%; height: 100%;
     object-fit: cover;
@@ -359,10 +360,16 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
     .nav a { padding: 8px 10px; font-size: 13px; }
     .nav .nav-cta { padding: 9px 13px; }
 
-    .hero    { padding: 104px 18px 80px; min-height: 92svh; }
+    /* 数値カードを1枚に減らしたぶん、ヒーローを低くして
+       横長写真の切り落とされる幅を減らす */
+    .hero    { padding: 96px 18px 72px; min-height: 82svh; }
     .section { padding: 72px 18px; }
 
+    /* 縦向き用の切り出しは中央〜やや上に見せ場がある */
+    .hero-bg img { object-position: center 46%; }
+
     .hero-actions .btn { flex: 1 1 100%; justify-content: center; }
-    .stat { flex: 1 1 calc(50% - 7px); padding: 13px 16px 11px; }
+    .hero-actions { margin-bottom: 34px; }
+    .stat { padding: 13px 18px 11px; }
     .site-footer { padding: 36px 18px 52px; }
 }

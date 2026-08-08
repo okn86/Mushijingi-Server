@@ -148,6 +148,12 @@
         var minZ = (props && typeof props.minZoom === 'number') ? props.minZoom : -6;
         ctx.labelMinZ = LABEL_MIN_UNMINED - minZ;
 
+        // 実タイルが存在する最深段階。ラベルを「必ず出す」判定に使う。
+        var res0 = ctx.olMap.getView().getResolutions();
+        ctx.tileMaxZ = res0 ? res0.length - 1 : 0;
+
+        extendMaxZoom(ctx);
+
         // 地点が 0 件でも UI は出す。戻るリンクや一覧ボタンまで消えると
         // 「ただの地図」になり、機能があること自体が分からなくなるため。
 
@@ -180,19 +186,71 @@
 
     // ------------------------------------------------------------ レイヤー
 
+    // ------------------------------------------------------- 拡大上限の拡張
+
+    /*
+     * uNmINeD はタイル解像度を  resolutions[z] = ブロック毎ピクセル * devicePixelRatio
+     * として組み立てる。おかげで高精細画面ではタイルが端末の実ピクセル等倍で
+     * 描かれて綺麗になる反面、CSS ピクセル基準の拡大率は画面倍率のぶんだけ下がる。
+     *
+     *   PC (DPR 1)    最深段階で 1ブロック = 4 CSSpx
+     *   スマホ(DPR 3) 最深段階で 1ブロック = 1.33 CSSpx  ← 拡大できないと感じる原因
+     *
+     * そこでビューの解像度リストだけを下方向に継ぎ足す。タイルグリッドは触らない
+     * ので、最深タイルがそのまま引き伸ばして描かれる。#map に image-rendering:
+     * pixelated が効いているため、ぼやけずにブロックが大きくなるだけで済む。
+     */
+    function extendMaxZoom(ctx) {
+        var olMap = ctx.olMap;
+        var view = olMap.getView();
+        var res = view.getResolutions();
+        if (!res || res.length < 2) return;
+
+        var dpr = window.devicePixelRatio || 1;
+        var extra = Math.min(3, Math.max(1, Math.ceil(Math.log(dpr) / Math.LN2) + 1));
+
+        var out = res.slice();
+        for (var i = 0; i < extra; i++) out.push(out[out.length - 1] / 2);
+
+        // 元のビューと同じ制約を保つため、範囲はタイルグリッドから借りる
+        var extent;
+        try {
+            olMap.getLayers().getArray().some(function (l) {
+                var src = l.getSource && l.getSource();
+                var grid = src && src.getTileGrid && src.getTileGrid();
+                if (grid) { extent = grid.getExtent(); return true; }
+                return false;
+            });
+        } catch (e) { extent = undefined; }
+
+        olMap.setView(new ol.View({
+            center: view.getCenter(),
+            extent: extent,
+            projection: view.getProjection(),
+            resolutions: out,
+            maxZoom: out.length - 1,
+            zoom: view.getZoom(),
+            constrainResolution: true,
+            showFullExtent: true,
+            constrainOnlyCenter: true,
+            enableRotation: false
+        }));
+
+        // 座標グリッドの目盛り間隔は生成時の getMaxZoom() から決まるので、
+        // 深い段階でも目盛りが出るよう作り直させる。
+        try { ctx.map.updateGraticule(); } catch (e) { /* 無くても致命的ではない */ }
+    }
+
     // ラベルの出し方を 3 段階で決める。
     //   'off'       … 引きすぎ。ラベルは出さない
     //   'declutter' … 通常。重なったラベルは退避して消える
     //   'always'    … 最大まで拡大した時。重なっても全部出す
     function labelState(ctx) {
-        var view = ctx.olMap.getView();
-        var z = view.getZoom();
+        var z = ctx.olMap.getView().getZoom();
         if (z == null) return 'off';
 
-        var res = view.getResolutions();
-        var maxZ = res ? res.length - 1 : 0;
-
-        if (z >= maxZ - 0.01) return 'always';
+        // 実タイルの最深段階に達したら以降はずっと「必ず出す」
+        if (z >= (ctx.tileMaxZ || 0) - 0.01) return 'always';
         return (z >= ctx.labelMinZ) ? 'declutter' : 'off';
     }
 

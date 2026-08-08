@@ -42,7 +42,13 @@
 
     <!-- ================================ ヒーロー ================================ -->
     <section class="hero">
-        <div class="hero-bg"><img src="img/hero.jpg" alt="サーバーの街並み"></div>
+        <!-- 縦長画面では横長写真の幅が大半切り落とされるので、縦向き用の切り出しに差し替える -->
+        <div class="hero-bg">
+            <picture>
+                <source media="(max-width: 720px)" srcset="img/hero-portrait.jpg">
+                <img src="img/hero.jpg" alt="サーバーの街並み">
+            </picture>
+        </div>
         <div class="hero-veil"></div>
         <div class="hero-glow" aria-hidden="true"></div>
 
@@ -66,8 +72,6 @@
             <!-- 実際のワールドデータから算出した数字 -->
             <div class="stats">
                 <div class="stat"><b>1,258,637</b><span>探索済みチャンク</span></div>
-                <div class="stat"><b>159,744</b><span>東西のブロック数</span></div>
-                <div class="stat"><b>3</b><span>ディメンション</span></div>
             </div>
         </div>
 
