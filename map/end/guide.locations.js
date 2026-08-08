@@ -1,7 +1,7 @@
 /* 自動生成。編集しても render-map.ps1 の実行で上書きされる。
    地点は guide.locations.csv、範囲は guide.areas.csv、
    カテゴリは guide.categories.csv を編集すること。
-   生成元: 地点 57 件 / 範囲 1 件 / カテゴリ 15 件 */
+   生成元: 地点 60 件 / 範囲 1 件 / カテゴリ 15 件 */
 
 UnminedGuideLocations = {
 
@@ -80,7 +80,10 @@ UnminedGuideLocations = {
         { name: "墓地", x: -2294, z: 617, category: "structure", dimension: "overworld" },
         { name: "古代遺跡発掘駅", x: -4680, z: 450, category: "station", dimension: "overworld" },
         { name: "作りかけ駅", x: -5988, z: 450, category: "station", dimension: "overworld" },
-        { name: "最古の住民看板", x: -981, z: 373, category: "structure", dimension: "overworld" }
+        { name: "最古の住民看板", x: -981, z: 373, category: "structure", dimension: "overworld" },
+        { name: "第一次氷塊リニア開拓御礼碑", x: -6470, z: 449, category: "structure", dimension: "overworld" },
+        { name: "マウハウス", x: -1124, z: 164, category: "build", dimension: "overworld" },
+        { name: "第一次氷塊リニア開拓記念駅", x: -6463, z: 448, category: "station", dimension: "overworld" }
     ],
 
     areas: [
