@@ -90,7 +90,7 @@ UnminedGuideLocations = {
         { name: "ネザーポータル 2", x: -504, z: -136, y: 45, category: "portal", dimension: "nether" },
         { name: "ネザーポータル 3", x: -120, z: 173, y: 106, category: "portal", dimension: "nether" },
         { name: "ネザーポータル 4", x: 716, z: -740, y: 75, category: "portal", dimension: "nether" },
-        { name: "ネザーポータル 5", x: 1100, z: 138, y: 71, category: "portal", dimension: "nether" },
+        { name: "ネザーポータル 5", x: 1100, z: 138, y: 71, category: "portal", dimension: "nether", description: "キノコ島へ行くゲート" },
         { name: "ネザーポータル 6", x: 4543, z: -93, y: 77, category: "portal", dimension: "nether" }
     ],
 
