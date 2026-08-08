@@ -18,7 +18,8 @@
     // ラベルを出し始める uNmINeD のズーム段階（-6 〜 maxZoom）。
     // OpenLayers のビューは 0 始まりの通し番号なので、minZoom を足して換算する。
     var LABEL_MIN_UNMINED = -3;
-    var HIT_TOLERANCE  = 14;   // 指でのタップ判定の甘さ（px）
+    var HIT_TOLERANCE  = 20;   // 地点の、指でのタップ判定の甘さ（px）
+    var AREA_HIT_TOLERANCE = 0; // 面は塗りの内側だけ。地点より必ず下に来るようにする。
     var DRAFT_KEY      = 'unminedGuideDrafts2';
     var HIDDEN_KEY     = 'unminedGuideHidden';
     var HIDDEN_KIND_KEY = 'unminedGuideHiddenKind';
@@ -472,21 +473,40 @@
     function buildInteractions(ctx) {
         var filter = function (l) { return guideLayers(ctx).indexOf(l) !== -1; };
 
+        /*
+         * 地点を先に、面は誰も当たらなかったときだけ拾う。
+         *
+         * 1回の走査でまとめて取り、あとから種類で優先すると駄目だった。
+         * 面は塗りの内側どこでも当たるので、指1本ぶん外したタップは
+         * ピンの判定半径(HIT_TOLERANCE)から外れた瞬間に面へ吸われる。
+         * 街のポリゴンの中にある地点が事実上押せなくなっていた。
+         */
+        function pickAt(pixel, kind) {
+            var found = null;
+            ctx.olMap.forEachFeatureAtPixel(pixel, function (feature) {
+                if (found || feature.get('guideKind') !== kind) return;
+                found = {
+                    item: feature.get('guideItem'),
+                    kind: feature.get('guideKind'),
+                    draft: feature.get('guideDraft')
+                };
+            }, {
+                // 面は塗りの内側どこでも当たるので甘さを足す必要がない。
+                // むしろ足すと外周のすぐ外まで面になり、街の縁の地点を隠す。
+                hitTolerance: (kind === 'area') ? AREA_HIT_TOLERANCE : HIT_TOLERANCE,
+                layerFilter: filter
+            });
+            return found;
+        }
+        ctx.pickAt = pickAt;
+
+        function pick(pixel) { return pickAt(pixel, 'point') || pickAt(pixel, 'area'); }
+
         ctx.olMap.on('singleclick', function (evt) {
             // 範囲を描いている最中はクリックを取らない
             if (ctx.edit && ctx.drawMode === 'area') return;
 
-            var hit = null;
-            ctx.olMap.forEachFeatureAtPixel(evt.pixel, function (feature) {
-                // ピンを面より優先する
-                if (!hit || (hit.kind === 'area' && feature.get('guideKind') === 'point')) {
-                    hit = {
-                        item: feature.get('guideItem'),
-                        kind: feature.get('guideKind'),
-                        draft: feature.get('guideDraft')
-                    };
-                }
-            }, { hitTolerance: HIT_TOLERANCE, layerFilter: filter });
+            var hit = pick(evt.pixel);
 
             if (hit && hit.item && !ctx.isHidden(hit.item, hit.kind)) {
                 ctx.openPopup(hit.item, hit.kind, hit.draft);
@@ -508,7 +528,8 @@
                 ctx.olMap.getTargetElement().style.cursor = 'crosshair';
                 return;
             }
-            var over = ctx.olMap.hasFeatureAtPixel(evt.pixel, { hitTolerance: HIT_TOLERANCE, layerFilter: filter });
+            // クリックと同じ判定を使う。見た目のカーソルと実際に開くものがずれないように。
+            var over = !!pick(evt.pixel);
             ctx.olMap.getTargetElement().style.cursor = over ? 'pointer' : (ctx.edit ? 'crosshair' : '');
         });
     }
