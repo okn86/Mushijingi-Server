@@ -1,17 +1,18 @@
-/* サーバー紹介サイトのスタイル。
-   地図側 (guide.css) と同じ暗色トーンで揃えている。 */
+/* 蟲神器サーバー 紹介サイト */
 
 :root {
     color-scheme: dark;
-    --bg:        #131316;
-    --bg-raised: #1c1c21;
-    --line:      rgba(255, 255, 255, .11);
-    --text:      #f2f2f3;
-    --muted:     rgba(255, 255, 255, .58);
-    --accent:    #5cc46b;
-    --accent-2:  #4ea3f5;
-    --radius:    14px;
-    --page:      1080px;
+    --bg:      #0a0a0c;
+    --bg-2:    #121216;
+    --card:    #17171c;
+    --line:    rgba(255, 255, 255, .1);
+    --text:    #f4f4f5;
+    --muted:   rgba(255, 255, 255, .58);
+    --dim:     rgba(255, 255, 255, .38);
+    --accent:  #00e5a0;
+    --accent-2:#38bdf8;
+    --accent-3:#c084fc;
+    --page:    1160px;
 }
 
 * { box-sizing: border-box; }
@@ -22,279 +23,346 @@ body {
     margin: 0;
     font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
     font-size: 16px;
-    line-height: 1.75;
+    line-height: 1.8;
     color: var(--text);
     background: var(--bg);
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
 }
 
-/* 背景にうっすらグリッド（マイクラのブロック感） */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background-image:
-        linear-gradient(rgba(255, 255, 255, .022) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, .022) 1px, transparent 1px);
-    background-size: 32px 32px;
-    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
-}
+img { display: block; max-width: 100%; }
 
-h1, h2, h3 { line-height: 1.3; letter-spacing: .01em; }
+h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
 
-/* ------------------------------------------------------------ ヘッダー */
+/* ================================================================ ヘッダー */
 
 .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 20;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 14px 24px;
-    background: rgba(19, 19, 22, .82);
-    border-bottom: 1px solid var(--line);
-    backdrop-filter: blur(12px);
+    padding: 16px 26px;
+    border-bottom: 1px solid transparent;
+    transition: background .3s, border-color .3s, padding .3s, backdrop-filter .3s;
+}
+.site-header.is-stuck {
+    padding: 11px 26px;
+    background: rgba(10, 10, 12, .78);
+    border-bottom-color: var(--line);
+    backdrop-filter: blur(16px) saturate(1.4);
 }
 
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: var(--text);
-}
+.brand { display: flex; align-items: center; gap: 11px; text-decoration: none; color: var(--text); }
 
 .brand-mark {
-    width: 26px;
-    height: 26px;
-    border-radius: 7px;
-    background: linear-gradient(140deg, var(--accent), #3d8f4d);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2);
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2) 55%, var(--accent-3));
+    box-shadow: 0 0 18px rgba(0, 229, 160, .5), inset 0 0 0 1px rgba(255, 255, 255, .3);
 }
 
-.brand-name { font-size: 15.5px; font-weight: 700; }
+.brand-name { font-size: 16px; font-weight: 800; letter-spacing: .02em; }
 
-.nav { display: flex; align-items: center; gap: 6px; }
+.nav { display: flex; align-items: center; gap: 4px; }
 
 .nav a {
-    padding: 8px 13px;
+    padding: 9px 14px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
     color: var(--muted);
-    border-radius: 9px;
+    border-radius: 10px;
+    transition: color .18s, background .18s;
 }
-.nav a:hover { color: var(--text); background: rgba(255, 255, 255, .07); }
+.nav a:hover { color: var(--text); background: rgba(255, 255, 255, .08); }
 
 .nav .nav-cta {
-    color: #0d1a10;
-    background: var(--accent);
+    display: inline-flex; align-items: center; gap: 7px;
+    color: #04120c;
+    background: linear-gradient(135deg, var(--accent), #34d399);
+    box-shadow: 0 4px 20px rgba(0, 229, 160, .32);
 }
-.nav .nav-cta:hover { background: #6fd67e; color: #0d1a10; }
+.nav .nav-cta:hover { color: #04120c; filter: brightness(1.1); }
 
-/* ---------------------------------------------------------------- 共通 */
+/* ================================================================ ヒーロー */
 
-main { max-width: var(--page); margin: 0 auto; padding: 0 24px; }
-
-.section { padding: 68px 0; border-top: 1px solid var(--line); }
-.section:first-of-type { border-top: 0; }
-
-.section-title { margin: 0 0 10px; font-size: 26px; }
-
-.section-lead { max-width: 60ch; margin: 0 0 30px; color: var(--muted); }
-
-.btn {
-    display: inline-flex;
+.hero {
+    position: relative;
+    display: flex;
     align-items: center;
-    gap: 8px;
-    min-height: 46px;
-    padding: 11px 22px;
-    font-size: 15px;
-    font-weight: 700;
-    text-decoration: none;
-    border: 1px solid transparent;
-    border-radius: 11px;
-    cursor: pointer;
-    transition: background .15s, border-color .15s, transform .1s;
+    min-height: 100svh;
+    padding: 120px 26px 96px;
+    overflow: hidden;
 }
-.btn:active { transform: translateY(1px); }
 
-.btn-primary { color: #0d1a10; background: var(--accent); }
-.btn-primary:hover { background: #6fd67e; }
-
-.btn-ghost {
-    color: var(--text);
-    background: rgba(255, 255, 255, .06);
-    border-color: var(--line);
+.hero-bg { position: absolute; inset: 0; z-index: 0; }
+.hero-bg img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 42%;
+    transform: scale(1.06);
+    animation: heroDrift 34s ease-in-out infinite alternate;
 }
-.btn-ghost:hover { background: rgba(255, 255, 255, .12); }
+@keyframes heroDrift {
+    from { transform: scale(1.06) translate3d(0, 0, 0); }
+    to   { transform: scale(1.14) translate3d(-1.4%, -1.6%, 0); }
+}
 
-/* -------------------------------------------------------------- ヒーロー */
+/* 写真の上に暗幕。下に行くほど濃くして本文へ繋げる */
+.hero-veil {
+    position: absolute; inset: 0; z-index: 1;
+    background:
+        linear-gradient(to bottom, rgba(10,10,12,.78) 0%, rgba(10,10,12,.42) 34%, rgba(10,10,12,.86) 82%, var(--bg) 100%),
+        linear-gradient(105deg, rgba(10,10,12,.8) 0%, rgba(10,10,12,.15) 62%);
+}
 
-.hero { padding: 92px 0 76px; }
+.hero-glow {
+    position: absolute; z-index: 1;
+    top: 8%; left: 50%;
+    width: min(1100px, 120vw); aspect-ratio: 1;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(0,229,160,.2) 0%, rgba(56,189,248,.1) 38%, transparent 66%);
+    filter: blur(30px);
+    animation: pulse 9s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes pulse { 0%,100% { opacity:.55 } 50% { opacity:1 } }
+
+.hero-inner { position: relative; z-index: 2; width: 100%; max-width: var(--page); margin: 0 auto; }
 
 .hero-eyebrow {
-    margin: 0 0 14px;
-    font-size: 12.5px;
-    font-weight: 700;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--accent);
+    display: inline-flex; align-items: center; gap: 9px;
+    margin: 0 0 22px;
+    padding: 7px 16px 7px 13px;
+    font-size: 12.5px; font-weight: 800; letter-spacing: .1em;
+    color: rgba(255, 255, 255, .82);
+    background: rgba(255, 255, 255, .07);
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 999px;
+    backdrop-filter: blur(10px);
 }
+.hero-eyebrow .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+    animation: blink 2.4s ease-in-out infinite;
+}
+@keyframes blink { 0%,100% { opacity:1 } 50% { opacity:.35 } }
 
-.hero h1 {
-    margin: 0 0 20px;
-    font-size: clamp(32px, 6vw, 52px);
-    letter-spacing: -.01em;
+.hero-title { margin: 0 0 20px; font-size: clamp(46px, 11vw, 116px); font-weight: 900; letter-spacing: -.03em; }
+.hero-title .line { display: block; }
+.hero-title .grad {
+    background: linear-gradient(100deg, var(--accent) 0%, var(--accent-2) 48%, var(--accent-3) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
 }
 
 .hero-lead {
-    max-width: 54ch;
-    margin: 0 0 34px;
-    font-size: 17px;
-    color: var(--muted);
+    max-width: 40ch;
+    margin: 0 0 38px;
+    font-size: clamp(16px, 2.1vw, 20px);
+    color: rgba(255, 255, 255, .82);
+    text-shadow: 0 2px 18px rgba(0, 0, 0, .6);
 }
 
-.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 13px; margin-bottom: 56px; }
 
-/* -------------------------------------------------------------- 参加方法 */
+.stats { display: flex; flex-wrap: wrap; gap: 14px; }
+
+.stat {
+    padding: 15px 24px 13px;
+    background: rgba(255, 255, 255, .055);
+    border: 1px solid rgba(255, 255, 255, .13);
+    border-radius: 14px;
+    backdrop-filter: blur(14px);
+}
+.stat b {
+    display: block;
+    font-size: clamp(22px, 3.4vw, 30px); font-weight: 900;
+    line-height: 1.15; font-variant-numeric: tabular-nums;
+    background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+}
+.stat span { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: var(--dim); }
+
+.scroll-hint {
+    position: absolute; z-index: 2;
+    bottom: 26px; left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, .45);
+    animation: bob 2.4s ease-in-out infinite;
+}
+.scroll-hint:hover { color: var(--text); }
+@keyframes bob { 0%,100% { transform: translate(-50%, 0) } 50% { transform: translate(-50%, 9px) } }
+
+/* ================================================================== ボタン */
+
+.btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    min-height: 50px;
+    padding: 13px 26px;
+    font-size: 15px; font-weight: 800;
+    text-decoration: none;
+    border: 1px solid transparent; border-radius: 13px;
+    cursor: pointer;
+    transition: transform .16s, box-shadow .22s, filter .18s, background .18s;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+
+.btn-primary {
+    color: #04120c;
+    background: linear-gradient(135deg, var(--accent), #34d399 60%, var(--accent-2));
+    box-shadow: 0 8px 30px rgba(0, 229, 160, .34);
+}
+.btn-primary:hover { box-shadow: 0 12px 40px rgba(0, 229, 160, .48); filter: brightness(1.07); }
+
+.btn-glass {
+    color: var(--text);
+    background: rgba(255, 255, 255, .09);
+    border-color: rgba(255, 255, 255, .2);
+    backdrop-filter: blur(10px);
+}
+.btn-glass:hover { background: rgba(255, 255, 255, .16); }
+
+/* ================================================================== 共通 */
+
+.section { max-width: var(--page); margin: 0 auto; padding: 104px 26px; }
+
+.section-head { margin-bottom: 46px; }
+
+.kicker {
+    display: block; margin-bottom: 12px;
+    font-size: 12px; font-weight: 900; letter-spacing: .22em; text-transform: uppercase;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+}
+
+.section-title { margin: 0 0 14px; font-size: clamp(28px, 4.6vw, 42px); font-weight: 900; }
+
+.section-lead { max-width: 62ch; margin: 0; font-size: 16px; color: var(--muted); }
+
+.reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity .7s cubic-bezier(.22,.8,.3,1), transform .7s cubic-bezier(.22,.8,.3,1);
+}
+.reveal.is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .hero-bg img, .hero-glow, .hero-eyebrow .dot, .scroll-hint { animation: none; }
+    html { scroll-behavior: auto; }
+}
+
+/* ================================================================== マップ */
+
+.promo {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.25fr .95fr;
+    gap: 40px;
+    padding: 52px 46px;
+    background: linear-gradient(150deg, #16161c, #101014);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.promo-glow {
+    position: absolute; top: -45%; right: -14%;
+    width: 620px; aspect-ratio: 1;
+    background: radial-gradient(circle, rgba(56,189,248,.24), rgba(192,132,252,.12) 44%, transparent 68%);
+    filter: blur(26px);
+    pointer-events: none;
+}
+
+.promo-body { position: relative; }
+.promo-body h2 { margin: 0 0 14px; font-size: clamp(24px, 3.4vw, 34px); font-weight: 900; }
+.promo-body p  { margin: 0 0 30px; color: var(--muted); }
+
+.promo-dims { position: relative; display: flex; flex-direction: column; gap: 11px; }
+
+.dim {
+    display: block;
+    padding: 16px 20px;
+    text-decoration: none; color: inherit;
+    background: rgba(255, 255, 255, .04);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--c);
+    border-radius: 13px;
+    transition: background .2s, transform .2s;
+}
+.dim:hover { background: rgba(255, 255, 255, .09); transform: translateX(5px); }
+.dim b    { display: block; font-size: 15.5px; font-weight: 800; }
+.dim span { font-size: 12.5px; color: var(--dim); }
+
+/* ============================================================ 参加について */
 
 .join-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: 14px;
-    margin-bottom: 34px;
+    grid-template-columns: repeat(auto-fit, minmax(238px, 1fr));
+    gap: 15px;
+    margin-bottom: 26px;
 }
 
 .field {
-    padding: 16px 18px;
-    background: var(--bg-raised);
+    padding: 22px 24px;
+    background: var(--card);
     border: 1px solid var(--line);
-    border-radius: var(--radius);
+    border-radius: 16px;
+    transition: border-color .25s, transform .25s;
 }
+.field:hover { border-color: rgba(0, 229, 160, .4); transform: translateY(-3px); }
 
 .field-label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .05em;
-    color: var(--muted);
+    display: block; margin-bottom: 8px;
+    font-size: 11.5px; font-weight: 800; letter-spacing: .09em;
+    color: var(--dim);
 }
-
-.field-value { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-
-.field-value code {
-    font-family: ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, monospace;
-    font-size: 15px;
-    color: var(--text);
-    word-break: break-all;
-}
-
-.copy {
-    flex: none;
-    min-height: 32px;
-    padding: 5px 12px;
-    font: inherit;
-    font-size: 12.5px;
-    font-weight: 700;
-    color: var(--text);
-    background: rgba(255, 255, 255, .09);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    cursor: pointer;
-}
-.copy:hover { background: rgba(255, 255, 255, .16); }
-.copy.is-done { color: #0d1a10; background: var(--accent); border-color: transparent; }
-
-.steps { max-width: 60ch; margin: 0; padding-left: 22px; color: var(--muted); }
-.steps li { margin-bottom: 8px; }
-.steps strong { color: var(--text); }
+.field-value { font-size: 16.5px; font-weight: 700; }
 
 .note {
-    max-width: 60ch;
-    margin: 0;
-    padding: 14px 18px;
-    font-size: 14.5px;
-    color: var(--muted);
-    background: rgba(255, 255, 255, .03);
+    max-width: 62ch; margin: 0;
+    padding: 17px 22px;
+    font-size: 14.5px; color: var(--muted);
+    background: rgba(56, 189, 248, .06);
     border-left: 3px solid var(--accent-2);
-    border-radius: 0 10px 10px 0;
+    border-radius: 0 12px 12px 0;
 }
 
-/* ---------------------------------------------------------------- カード */
-
-.cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 16px;
-}
-
-.card {
-    padding: 24px 22px;
-    background: var(--bg-raised);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-}
-
-.card-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 42px;
-    height: 42px;
-    margin-bottom: 14px;
-    font-size: 21px;
-    background: color-mix(in srgb, var(--c) 18%, transparent);
-    border: 1px solid color-mix(in srgb, var(--c) 40%, transparent);
-    border-radius: 11px;
-}
-
-.card h3 { margin: 0 0 8px; font-size: 17px; }
-.card p  { margin: 0; font-size: 14.5px; color: var(--muted); }
-
-/* ------------------------------------------------------------ マップ導線 */
-
-.map-promo { border-top: 1px solid var(--line); }
-
-.map-promo-body {
-    padding: 40px 36px;
-    background:
-        radial-gradient(120% 130% at 12% 0%, rgba(78, 163, 245, .17), transparent 62%),
-        var(--bg-raised);
-    border: 1px solid var(--line);
-    border-radius: 18px;
-}
-
-.map-promo-body h2 { margin: 0 0 12px; font-size: 24px; }
-.map-promo-body p  { max-width: 56ch; margin: 0 0 26px; color: var(--muted); }
-
-/* ---------------------------------------------------------------- フッタ */
+/* ================================================================ フッター */
 
 .site-footer {
     max-width: var(--page);
     margin: 0 auto;
-    padding: 40px 24px 56px;
-    font-size: 13.5px;
-    color: var(--muted);
+    padding: 46px 26px 64px;
     border-top: 1px solid var(--line);
 }
-.site-footer p { margin: 0 0 6px; }
-.footer-note { font-size: 12.5px; color: rgba(255, 255, 255, .38); }
+.footer-brand { display: flex; align-items: center; gap: 11px; font-size: 15px; font-weight: 800; margin-bottom: 10px; }
+.footer-note  { margin: 0; font-size: 12.5px; color: var(--dim); }
 
-/* ---------------------------------------------------------------- スマホ */
+/* ================================================================== スマホ */
+
+@media (max-width: 860px) {
+    .promo { grid-template-columns: 1fr; gap: 30px; padding: 38px 26px; }
+}
 
 @media (max-width: 620px) {
-    .site-header { padding: 12px 16px; }
-    .brand-name  { font-size: 14.5px; }
-    .nav a       { padding: 8px 10px; font-size: 13.5px; }
-    main         { padding: 0 16px; }
-    .hero        { padding: 56px 0 48px; }
-    .section     { padding: 52px 0; }
+    .site-header, .site-header.is-stuck { padding: 11px 16px; }
+    .brand-name { font-size: 15px; }
+    .nav a { padding: 8px 10px; font-size: 13px; }
+    .nav .nav-cta { padding: 9px 13px; }
+
+    .hero    { padding: 104px 18px 80px; min-height: 92svh; }
+    .section { padding: 72px 18px; }
+
     .hero-actions .btn { flex: 1 1 100%; justify-content: center; }
-    .map-promo-body    { padding: 30px 22px; }
-    .site-footer { padding: 32px 16px 44px; }
+    .stat { flex: 1 1 calc(50% - 7px); padding: 13px 16px 11px; }
+    .site-footer { padding: 36px 18px 52px; }
 }

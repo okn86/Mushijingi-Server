@@ -6,156 +6,172 @@
 <meta name="robots" content="noindex, nofollow">
 
 <!-- ============================================================
-     ▼ ここから下の文言を書き換えてサーバーの内容に合わせる。
-       サイト名・説明・参加アドレスなどは【要編集】と書いた箇所。
+     文言を書き換える箇所には【要編集】と書いてある。
+     写真は img\ フォルダに入っている。
      ============================================================ -->
-<title>Mushijingi Server</title>
-<meta name="description" content="Minecraft 統合版サーバーの案内サイト">
+<title>蟲神器サーバー</title>
+<meta name="description" content="Minecraft 統合版サーバー「蟲神器サーバー」の案内サイト">
+
+<meta property="og:title" content="蟲神器サーバー">
+<meta property="og:description" content="Minecraft 統合版サーバー。ワールドマップ公開中。">
+<meta property="og:image" content="img/hero.jpg">
+<meta property="og:type" content="website">
 
 <link rel="stylesheet" href="style.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%235cc46b'/><rect x='6' y='14' width='20' height='12' fill='%236b4a2f'/><rect x='6' y='10' width='20' height='5' fill='%234e9c5c'/></svg>">
+<link rel="preload" as="image" href="img/hero.jpg">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2300e5a0'/><path d='M16 6l3 5h-6zM9 13h14l-2 4H11zM11 19h10l-3 7h-4z' fill='%230a0a0c'/></svg>">
 </head>
 
 <body>
 
-<header class="site-header">
-    <a class="brand" href="./">
+<header class="site-header" id="header">
+    <a class="brand" href="#top">
         <span class="brand-mark" aria-hidden="true"></span>
-        <!-- 【要編集】サーバー名 -->
-        <span class="brand-name">Mushijingi Server</span>
+        <span class="brand-name">蟲神器サーバー</span>
     </a>
     <nav class="nav">
         <a href="#join">参加について</a>
-        <a href="#about">サーバーについて</a>
-        <a class="nav-cta" href="map/">マップ</a>
+        <a class="nav-cta" href="map/">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M9 4L3 7v13l6-3 6 3 6-3V4l-6 3-6-3z"/><path d="M9 4v13M15 7v13"/></svg>
+            マップ
+        </a>
     </nav>
 </header>
 
-<main>
+<main id="top">
 
-    <!-- ============================== ヒーロー ============================== -->
+    <!-- ================================ ヒーロー ================================ -->
     <section class="hero">
-        <p class="hero-eyebrow">Minecraft 統合版サーバー</p>
-        <!-- 【要編集】キャッチコピー -->
-        <h1>みんなで作る、ひとつの世界。</h1>
-        <p class="hero-lead">
-            <!-- 【要編集】サーバーの紹介文 -->
-            長く続いているサバイバルサーバーです。拠点作り、大規模建築、
-            探検まで、それぞれのペースで遊べます。
-        </p>
-        <div class="hero-actions">
-            <a class="btn btn-primary" href="map/">
-                ワールドマップを見る
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
-            <a class="btn btn-ghost" href="#about">サーバーについて</a>
+        <div class="hero-bg"><img src="img/hero.jpg" alt="サーバーの街並み"></div>
+        <div class="hero-veil"></div>
+        <div class="hero-glow" aria-hidden="true"></div>
+
+        <div class="hero-inner">
+            <p class="hero-eyebrow"><span class="dot"></span>Minecraft 統合版サーバー</p>
+            <h1 class="hero-title">
+                <span class="line">蟲神器</span>
+                <span class="line grad">サーバー</span>
+            </h1>
+            <!-- 【要編集】キャッチコピー -->
+            <p class="hero-lead">積み上げてきた街と、その先の未開の地へ。</p>
+
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="map/">
+                    ワールドマップを開く
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+                <a class="btn btn-glass" href="#join">参加について</a>
+            </div>
+
+            <!-- 実際のワールドデータから算出した数字 -->
+            <div class="stats">
+                <div class="stat"><b>1,258,637</b><span>探索済みチャンク</span></div>
+                <div class="stat"><b>159,744</b><span>東西のブロック数</span></div>
+                <div class="stat"><b>3</b><span>ディメンション</span></div>
+            </div>
+        </div>
+
+        <a class="scroll-hint" href="#map" aria-label="下へ">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+        </a>
+    </section>
+
+    <!-- ================================ マップ ================================ -->
+    <section id="map" class="section">
+        <div class="promo reveal">
+            <div class="promo-glow" aria-hidden="true"></div>
+            <div class="promo-body">
+                <span class="kicker">World Map</span>
+                <h2>ワールドの全体像</h2>
+                <p>
+                    オーバーワールド・ネザー・エンドの3つを収録。
+                    拡大縮小しながら探索の記録を辿れます。
+                    ピンをタップすると拠点や施設の名前が表示されます。
+                </p>
+                <a class="btn btn-primary" href="map/">
+                    マップを開く
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+            </div>
+            <div class="promo-dims">
+                <a class="dim" href="map/overworld/" style="--c:#4ade80"><b>オーバーワールド</b><span>地上の世界</span></a>
+                <a class="dim" href="map/nether/" style="--c:#f87171"><b>ネザー</b><span>岩盤の天井を外して描画</span></a>
+                <a class="dim" href="map/end/" style="--c:#c084fc"><b>エンド</b><span>果ての世界</span></a>
+            </div>
         </div>
     </section>
 
-    <!-- ============================== 参加について ============================== -->
+    <!-- ================================ 参加について ================================ -->
     <section id="join" class="section">
-        <h2 class="section-title">参加について</h2>
-        <p class="section-lead">
-            身内向けのサーバーのため、接続先は公開していません。
-            参加を希望する場合は管理者まで直接お問い合わせください。
-        </p>
+        <div class="section-head reveal">
+            <span class="kicker">Join</span>
+            <h2 class="section-title">参加について</h2>
+            <p class="section-lead">
+                身内向けのサーバーのため、接続先は公開していません。
+                参加を希望する場合は管理者まで直接お問い合わせください。
+            </p>
+        </div>
 
-        <div class="join-grid">
+        <div class="join-grid reveal">
             <div class="field">
                 <span class="field-label">エディション</span>
-                <div class="field-value"><code>統合版 / Bedrock Edition</code></div>
+                <div class="field-value">統合版 / Bedrock Edition</div>
             </div>
-
             <div class="field">
                 <span class="field-label">対応バージョン</span>
-                <div class="field-value"><code>常に最新版</code></div>
+                <div class="field-value">常に最新版</div>
             </div>
-
             <div class="field">
                 <span class="field-label">接続先</span>
-                <div class="field-value"><code>非公開（招待制）</code></div>
+                <div class="field-value">非公開（招待制）</div>
             </div>
         </div>
 
-        <p class="note">
-            サーバーは常に最新バージョンで運用しています。
-            参加する際は Minecraft を最新版に更新してください。
+        <p class="note reveal">
+            サーバーは常に最新バージョンで運用しています。参加する際は Minecraft を最新版に更新してください。
         </p>
-    </section>
-
-    <!-- ========================== サーバーについて ========================== -->
-    <section id="about" class="section">
-        <h2 class="section-title">サーバーについて</h2>
-
-        <div class="cards">
-            <!-- 【要編集】特徴のカード。増減自由 -->
-            <article class="card">
-                <span class="card-icon" style="--c:#5cc46b">🌏</span>
-                <h3>サバイバル</h3>
-                <p>バニラ寄りの環境。整地も建築も、ゼロから積み上げていくスタイルです。</p>
-            </article>
-
-            <article class="card">
-                <span class="card-icon" style="--c:#4ea3f5">🗺️</span>
-                <h3>ワールドマップ</h3>
-                <p>探索済みのエリアをブラウザで確認できます。拠点や施設の場所も登録済み。</p>
-            </article>
-
-            <article class="card">
-                <span class="card-icon" style="--c:#f2b134">🏗️</span>
-                <h3>大規模建築</h3>
-                <p>街づくりや共同建築が進行中。参加すればすぐ手伝えます。</p>
-            </article>
-        </div>
-    </section>
-
-    <!-- ============================== マップ導線 ============================== -->
-    <section class="section map-promo">
-        <div class="map-promo-body">
-            <h2>ワールドマップ</h2>
-            <p>
-                オーバーワールド・ネザー・エンドの3つを収録。
-                拡大縮小して探索の記録を辿れます。ピンをタップすると
-                拠点や施設の名前が表示されます。
-            </p>
-            <a class="btn btn-primary" href="map/">
-                マップを開く
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
-        </div>
     </section>
 
 </main>
 
 <footer class="site-footer">
+    <div class="footer-brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        蟲神器サーバー
+    </div>
     <!-- 【要編集】必要ならDiscordなどのリンクを追加 -->
-    <p>Mushijingi Server</p>
-    <p class="footer-note">地図は uNmINeD で生成しています。ワールドの更新に合わせて随時反映されます。</p>
+    <p class="footer-note">マップは uNmINeD で生成しています。ワールドの更新に合わせて随時反映されます。</p>
 </footer>
 
 <script>
-    // アドレス・ポートのコピーボタン
-    document.querySelectorAll('.copy').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            var target = document.querySelector(btn.dataset.copy);
-            if (!target) return;
-            var text = target.textContent.trim();
-            var done = function () {
-                var old = btn.textContent;
-                btn.textContent = 'コピー済';
-                btn.classList.add('is-done');
-                setTimeout(function () { btn.textContent = old; btn.classList.remove('is-done'); }, 1500);
-            };
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(done, function () {});
-            } else {
-                var ta = document.createElement('textarea');
-                ta.value = text; document.body.appendChild(ta); ta.select();
-                try { document.execCommand('copy'); done(); } catch (e) {}
-                document.body.removeChild(ta);
-            }
+(function () {
+    'use strict';
+
+    // スクロールでヘッダーを不透明にする
+    var header = document.getElementById('header');
+    var onScroll = function () {
+        header.classList.toggle('is-stuck', window.scrollY > 40);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // 画面に入った要素をふわっと出す
+    var targets = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+            });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
+        targets.forEach(function (t, i) {
+            t.style.transitionDelay = (Math.min(i, 6) * 55) + 'ms';
+            io.observe(t);
         });
-    });
+    } else {
+        targets.forEach(function (t) { t.classList.add('is-in'); });
+    }
+
+})();
 </script>
 
 </body>
