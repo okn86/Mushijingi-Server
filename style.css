@@ -190,12 +190,18 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
 
 /*
  * グラデーション文字。
- * iOS Safari は background-clip:text と filter を併用すると描画が崩れ、
- * 色がくすんで暗く出ることがあるので filter は使わない。
- * 影は .hero-title の text-shadow が継承され、
- * 塗りが transparent でも字形どおりに落ちるのでそれで足りる。
+ *
+ * text-shadow は必ず打ち消すこと。CSS の描画順は
+ *   背景 → text-shadow → 文字
+ * であり、background-clip:text ではグラデーションが「背景」として塗られる。
+ * つまり親から継承した影がグラデーションの上に乗り、色が濁って暗くなる。
+ * 塗りが transparent なので影だけが見えている状態になる。
+ *
+ * 影が必要なら filter: drop-shadow ではなく（iOS Safari で描画が崩れる）、
+ * 背後に敷いた別要素で表現すること。ここは暗幕で十分な明度差があるため影なし。
  */
 .hero-title .grad {
+    text-shadow: none;
     background: linear-gradient(100deg, var(--accent) 0%, #5ecdff 52%, var(--accent-3) 100%);
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent; color: transparent;
@@ -402,8 +408,9 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
     .hero    { padding: 96px 18px 72px; min-height: 82svh; }
     .section { padding: 72px 18px; }
 
-    /* 縦向き用の切り出しは中央〜やや上に見せ場がある */
-    .hero-bg img { object-position: center 46%; }
+    /* 縦向き用の画像は太陽が中心に来るよう組んであり、
+       画面と同じ縦横比(約0.56)で書き出しているのでそのまま中央に置く */
+    .hero-bg img { object-position: center; }
 
     .hero-actions .btn { flex: 1 1 100%; justify-content: center; }
     .hero-actions { margin-bottom: 34px; }
