@@ -1,7 +1,7 @@
 /* 自動生成。編集しても render-map.ps1 の実行で上書きされる。
    地点は guide.locations.csv、範囲は guide.areas.csv、
    カテゴリは guide.categories.csv を編集すること。
-   生成元: 地点 68 件 / 範囲 1 件 / カテゴリ 15 件 */
+   生成元: 地点 87 件 / 範囲 1 件 / カテゴリ 15 件 */
 
 UnminedGuideLocations = {
 
@@ -91,7 +91,26 @@ UnminedGuideLocations = {
         { name: "ネザーポータル 3", x: -120, z: 173, y: 106, category: "portal", dimension: "nether" },
         { name: "ネザーポータル 4", x: 716, z: -740, y: 75, category: "portal", dimension: "nether" },
         { name: "ネザーポータル 5", x: 1100, z: 138, y: 71, category: "portal", dimension: "nether", description: "キノコ島へ行くゲート" },
-        { name: "ネザーポータル 6", x: 4543, z: -93, y: 77, category: "portal", dimension: "nether" }
+        { name: "ネザーポータル 6", x: 4543, z: -93, y: 77, category: "portal", dimension: "nether" },
+        { name: "オサーム・パール号", x: -1008, z: 546, category: "structure", dimension: "overworld" },
+        { name: "地下倉庫入口", x: -979, z: 419, category: "build", dimension: "overworld" },
+        { name: "バトル公民館", x: -1075, z: 439, category: "build", dimension: "overworld", description: "1階" },
+        { name: "オサムの満腹食堂  オサゼリヤ", x: -1068, z: 441, category: "build", dimension: "overworld" },
+        { name: "ふぐりの初期家", x: -1063, z: 373, category: "structure", dimension: "overworld" },
+        { name: "金玉の初期家", x: -1047, z: 373, category: "structure", dimension: "overworld" },
+        { name: "謎の石輪", x: -1034, z: 372, category: "structure", dimension: "overworld" },
+        { name: "文化遺産  初代畑跡地", x: -1012, z: 391, category: "structure", dimension: "overworld" },
+        { name: "ウヌバ井戸", x: -1004, z: 380, category: "structure", dimension: "overworld" },
+        { name: "awesomeの家", x: -1017, z: 374, category: "structure", dimension: "overworld" },
+        { name: "古の洞窟跡", x: -1015, z: 385, category: "structure", dimension: "overworld" },
+        { name: "聖火", x: -1358, z: 438, category: "structure", dimension: "overworld" },
+        { name: "峰倉文庫編集部", x: -957, z: 391, category: "build", dimension: "overworld", description: "4階" },
+        { name: "ブックオフ", x: -951, z: 389, category: "build", dimension: "overworld", description: "2階" },
+        { name: "花露水出版株式会社", x: -974, z: 353, category: "build", dimension: "overworld", description: "3階" },
+        { name: "ふぐり邸2", x: -886, z: 438, category: "build", dimension: "overworld" },
+        { name: "古代遺跡発掘場所", x: -4611, z: 205, category: "structure", dimension: "overworld" },
+        { name: "オサムテラス", x: -1089, z: 580, category: "build", dimension: "overworld" },
+        { name: "アイテム慰霊碑", x: -1115, z: 581, category: "structure", dimension: "overworld" }
     ],
 
     areas: [
