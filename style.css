@@ -550,6 +550,141 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
     .roster td:last-child { min-width: 0; }
 }
 
+/* ================================================================== 歴史 */
+
+/* 年へのジャンプ。項目が少ないので飾らず、細い罫線の小さなボタンだけにする。 */
+.tl-jump { display: flex; flex-wrap: wrap; gap: 8px; margin: -16px 0 48px; }
+
+.tl-jump a {
+    padding: 6px 15px;
+    font-size: 13px; font-weight: 700; letter-spacing: .02em;
+    text-decoration: none;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-variant-numeric: tabular-nums;
+    transition: color .18s, background .18s, border-color .18s;
+}
+.tl-jump a:hover { color: var(--text); background: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .22); }
+
+.tl-era { margin-bottom: 56px; scroll-margin-top: 88px; }
+
+.tl-era h3 {
+    display: flex; align-items: baseline; gap: 10px;
+    margin: 0 0 26px;
+    padding-bottom: 12px;
+    font-size: 19px; font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    border-bottom: 1px solid var(--line);
+}
+.tl-era-count { font-size: 12.5px; font-weight: 700; color: var(--dim); font-variant-numeric: tabular-nums; }
+
+/*
+ * 縦の年表。
+ * 日付列の幅 (--tl-col) と本文との間隔 (--tl-gap) から罫線と節の位置を決めているので、
+ * 幅を変えるときは変数だけ書き換えれば揃ったままになる。
+ */
+.tl {
+    --tl-col: 76px;
+    --tl-gap: 26px;
+    position: relative;
+    margin: 0; padding: 0;
+    list-style: none;
+}
+.tl::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--tl-col) + var(--tl-gap) / 2);
+    top: 9px; bottom: 9px;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--line) 24px, var(--line) calc(100% - 24px), transparent);
+}
+
+.tl-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--tl-col) 1fr;
+    column-gap: var(--tl-gap);
+    padding-bottom: 30px;
+}
+.tl-item:last-child { padding-bottom: 0; }
+
+/* 罫線の上に置く節。地の色で塗って線を切る。 */
+.tl-item::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--tl-col) + var(--tl-gap) / 2 - 3.5px);
+    top: 7px;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #34343d;
+    box-shadow: 0 0 0 4px var(--bg);
+}
+.tl-item.is-key::before {
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--bg), 0 0 0 7px rgba(0, 229, 160, .15);
+}
+
+.tl-when { text-align: right; padding-top: 1px; }
+.tl-when b {
+    display: block;
+    font-size: 13.5px; font-weight: 700;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.tl-when span {
+    display: block;
+    font-size: 11.5px; font-weight: 600;
+    color: var(--dim);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.tl-item.is-key .tl-when b { color: var(--text); }
+
+.tl-what h4 {
+    margin: 0;
+    font-size: 15.5px; font-weight: 700; line-height: 1.55;
+    letter-spacing: .005em;
+}
+.tl-item.is-key .tl-what h4 { font-size: 17px; font-weight: 800; }
+
+.tl-what p {
+    max-width: 66ch;
+    margin: 5px 0 0;
+    font-size: 14.5px; line-height: 1.78;
+    color: var(--muted);
+}
+
+@media (max-width: 620px) {
+    .tl-jump { margin: -8px 0 34px; gap: 7px; }
+    .tl-jump a { padding: 5px 13px; font-size: 12.5px; }
+
+    .tl-era { margin-bottom: 42px; scroll-margin-top: 70px; }
+    .tl-era h3 { margin-bottom: 20px; }
+
+    /*
+     * 日付を左に置くと本文の幅が 200px ほどしか残らない。
+     * 縦画面では日付を見出しの上に出し、罫線だけを左端に残す。
+     */
+    .tl { --tl-col: 0px; --tl-gap: 20px; }
+    .tl::before { left: 3px; }
+    .tl-item { grid-template-columns: 1fr; padding-left: 20px; padding-bottom: 26px; }
+    .tl-item::before { left: 0; top: 8px; }
+
+    .tl-when {
+        display: flex; align-items: baseline; gap: 8px;
+        margin-bottom: 3px;
+        text-align: left;
+    }
+    .tl-when b { font-size: 12px; letter-spacing: .04em; }
+    .tl-when span { font-size: 11.5px; }
+
+    .tl-what h4 { font-size: 15px; }
+    .tl-item.is-key .tl-what h4 { font-size: 16px; }
+    .tl-what p { font-size: 14px; }
+}
+
 /* ================================================================ フッター */
 
 .site-footer {
@@ -595,7 +730,8 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
     .hero-bg img { object-position: center; }
 
     /*
-     * ボタンはマップと名簿の2つだけを横1列に。
+     * マップを1行使って主役に置き、その下に歴史と名簿を2列で並べる。
+     * 3つを横1列にすると 390px 幅では各項目が折り返して段が崩れる。
      * 「写真を見る」はすぐ下のギャラリーへのリンクでしかなく、
      * スクロールすれば写真そのものが出てくるのでスマホでは省く。
      */
@@ -608,6 +744,7 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -.01em; }
         font-size: 14.5px;
         border-radius: 11px;
     }
+    .hero-actions .btn-primary { flex: 1 1 100%; }
     .hero-actions .btn[href="#gallery"] { display: none; }
     .btn-tail, .btn-arrow { display: none; }
 
