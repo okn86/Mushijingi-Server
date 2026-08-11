@@ -1,7 +1,7 @@
 /* 自動生成。編集しても render-map.ps1 の実行で上書きされる。
    地点は guide.locations.csv、範囲は guide.areas.csv、
    カテゴリは guide.categories.csv、クチコミは guide.reviews.csv を編集すること。
-   生成元: 地点 98 件 / 範囲 1 件 / カテゴリ 16 件 / クチコミ 107 件 */
+   生成元: 地点 98 件 / 範囲 1 件 / カテゴリ 16 件 / クチコミ 111 件 */
 
 UnminedGuideLocations = {
 
@@ -116,7 +116,7 @@ UnminedGuideLocations = {
         { name: "鮭池", x: -1106, z: 511, category: "structure", dimension: "overworld", image: "places/97d260f846.jpg", rating: 3.5, reviews: 820 },
         { name: "つありすとインフォメーション", x: -882, z: 396, category: "public", dimension: "overworld", rating: 3.7, reviews: 2180 },
         { name: "コズマ駅入口", x: -871, z: 383, category: "station", dimension: "overworld", rating: 3.1, reviews: 2760 },
-        { name: "村人ハウス", x: -858, z: 441, category: "build", dimension: "overworld", image: "places/4199418812.jpg" },
+        { name: "村人ハウス", x: -858, z: 441, category: "build", dimension: "overworld", image: "places/4199418812.jpg", rating: 3.6, reviews: 7482 },
         { name: "ジモティ爆破慰霊碑", x: -958, z: 372, category: "structure", dimension: "overworld", rating: 4.5, reviews: 210 },
         { name: "蟲神器市防災センター", x: -759, z: 404, category: "public", dimension: "overworld", image: "places/faa345d2db.jpg", rating: 3.9, reviews: 880 },
         { name: "motel SDGs", x: -1217, z: 741, category: "build", dimension: "overworld", rating: 3.7, reviews: 430 },
@@ -188,6 +188,7 @@ UnminedGuideLocations = {
         "自動化畑": [{ who: "yadav", rating: 3, date: "2025-09-27", text: "便利。ただし一度暴走して小麦まみれになった。" }, { who: "オハヨーデリー!", rating: 4, date: "2026-07-08", text: "ここのおかげでパンに困らない。" }],
         "殖栗建設事務所": [{ who: "いさばちさくらハウスは金食い虫！！！！", rating: 4, date: "2026-03-05", text: "仕事は早い。見積もりが雑。" }],
         "聖火": [{ who: "ヒカキン大好きおばあちゃん", rating: 4, date: "2026-01-14", text: "不思議な場所。ありがたい。" }, { who: "山ちゃんは困惑した彼には秘策があった", rating: 5, date: "2026-06-11", text: "土の床なのに雨降ってても消えない不思議な火。" }],
+        "村人ハウス": [{ who: "ヒロミ", rating: 5, date: "2025-12-05", text: "外に出なくていいので最高。ずっとここにいる。" }, { who: "【九龍建設組合】ミーゴス", rating: 2, date: "2026-02-12", text: "名前のとおり詰め込まれている。ベッドの間隔をもう少し空けてほしい。" }, { who: "いさばちさくらハウスは金食い虫！！！！", rating: 3, date: "2026-04-20", text: "これくらい質素でいい。金をかけすぎる家が多すぎる。" }, { who: "芳山", rating: 4, date: "2026-06-05", text: "住み心地は悪くない。夜はうるさい。" }],
         "第一次氷塊リニア開拓記念駅": [{ who: "BMP!BMP!BMP!", rating: 4, date: "2026-03-09", text: "終点まで乗る価値がある。長い。" }],
         "第一次氷塊リニア開拓御礼碑": [{ who: "アンドゥー", rating: 4, date: "2026-03-09", text: "ここまで来た人にしか分からない達成感がある。" }],
         "地下遺跡": [{ who: "ハムテル", rating: 5, date: "2026-02-09", text: "規模がすごい。" }],

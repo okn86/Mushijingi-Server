@@ -837,24 +837,21 @@
             }
             var max = Math.max.apply(null, counts.concat([1]));
 
+            // 0 件の地点でも棒は出す（全部空のまま）。件数が入るまで見た目が
+            // 変わってしまうと、同じ種類の場所なのに別物に見えるため。
             var sum = el('div', 'guide-rv-sum');
-
-            if (counts.some(function (c) { return c > 0; })) {
-                var bars = el('div', 'guide-rv-bars');
-                for (var n = 5; n >= 1; n--) {
-                    var row = el('div', 'guide-rv-bar');
-                    row.appendChild(el('span', 'guide-rv-barn', String(n)));
-                    var track = el('span', 'guide-rv-track');
-                    var fill = el('span', 'guide-rv-fill');
-                    fill.style.width = (counts[n - 1] / max * 100) + '%';
-                    track.appendChild(fill);
-                    row.appendChild(track);
-                    bars.appendChild(row);
-                }
-                sum.appendChild(bars);
-            } else {
-                sum.classList.add('is-scoreonly');
+            var bars = el('div', 'guide-rv-bars');
+            for (var n = 5; n >= 1; n--) {
+                var row = el('div', 'guide-rv-bar');
+                row.appendChild(el('span', 'guide-rv-barn', String(n)));
+                var track = el('span', 'guide-rv-track');
+                var fill = el('span', 'guide-rv-fill');
+                fill.style.width = (counts[n - 1] / max * 100) + '%';
+                track.appendChild(fill);
+                row.appendChild(track);
+                bars.appendChild(row);
             }
+            sum.appendChild(bars);
 
             var big = el('div', 'guide-rv-big');
             big.innerHTML = '<b>' + sc.rating.toFixed(1) + '</b>' + starsHtml(sc.rating, 'is-lg') +
