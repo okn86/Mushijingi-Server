@@ -450,6 +450,48 @@
         'fill="#ea4335" stroke="rgba(120,20,14,.55)" stroke-width="0.8"/>' +
         '<circle cx="15" cy="14.6" r="4.4" fill="#b3241b"/></svg>');
 
+    /*
+     * 星ごとの本数を、平均点と件数から「ありそうな形」に割り振る。
+     * 本文がまだ 1 件も無い地点でも棒グラフを出せるようにするためのもので、
+     * 本文が入っている地点では実際の数を数える（こちらは使わない）。
+     *
+     * BASE は実際のレビュー分布によくある J 字（5 が多く、1 もそこそこ、
+     * 真ん中が凹む）を写した重み。これを exp(θk) で傾けて、平均が指定の
+     * 点数ちょうどになる θ を二分法で探す。最大エントロピーの傾け方なので、
+     * 4.8 なら 5 に偏り、2.2 なら 1〜2 が高くて 5 が少し残る形になる。
+     *
+     * 地点名から作った種でごく僅かに揺らしているのは、同じ点数の地点が
+     * 並んだときに寸分違わぬ棒が出て、作り物だと見えてしまうため。
+     */
+    function synthCounts(rating, total, seed) {
+        var BASE = [1.55, 0.75, 0.85, 1.10, 1.75];
+        var h = 0;
+        for (var i = 0; i < seed.length; i++) h = (h * 131 + seed.charCodeAt(i)) % 100003;
+        var v = BASE.map(function (b, k) { return b * (1 + (((h >> (k * 3)) % 7) - 3) * 0.04); });
+
+        function meanAt(th) {
+            var s = 0, m = 0;
+            for (var k = 1; k <= 5; k++) { var p = v[k - 1] * Math.exp(th * k); s += p; m += k * p; }
+            return m / s;
+        }
+        var lo = -8, hi = 8;
+        for (var n = 0; n < 60; n++) {
+            var mid = (lo + hi) / 2;
+            if (meanAt(mid) < rating) lo = mid; else hi = mid;
+        }
+        var th = (lo + hi) / 2, sum = 0, p = [];
+        for (var k2 = 1; k2 <= 5; k2++) { var q = v[k2 - 1] * Math.exp(th * k2); p.push(q); sum += q; }
+
+        // 端数は大きい順に配って、合計を件数ぴったりに合わせる
+        var exact = p.map(function (q) { return q / sum * total; });
+        var out = exact.map(Math.floor);
+        var rest = total - out.reduce(function (a, b) { return a + b; }, 0);
+        var order = exact.map(function (e, i) { return [e - Math.floor(e), i]; })
+            .sort(function (a, b) { return b[0] - a[0]; });
+        for (var j = 0; j < rest; j++) out[order[j % 5][1]]++;
+        return out;
+    }
+
     // クチコミの人物アイコン。名前から色を決めて頭文字を出す。
     var AVATAR_COLORS = ['#d93025', '#1a73e8', '#188038', '#e37400', '#9334e6', '#0b8a68', '#c5221f'];
     function avatarOf(name) {
@@ -504,13 +546,20 @@
             return all[item.name] || [];
         }
 
-        // 評価は基本クチコミの平均。まだ 1 件も無ければ CSV の rating 列を使う。
+        // 表に出す点数と件数は guide.locations.csv の値を優先する。
+        // guide.reviews.csv に入っている本文つきのクチコミは、何千件かの
+        // うち文章が残っている数件、という扱い。ここを逆にすると、
+        // 1件書き足しただけで「2.2 (7,483)」が「2.0 (1)」に化けてしまう。
+        // 点数を入れていない地点だけ、本文の平均をそのまま点数にする。
         function scoreOf(item) {
+            if (item.rating || item.reviews) {
+                return { rating: +(item.rating || 0), count: +(item.reviews || 0), fromCsv: true };
+            }
             var rs = reviewsOf(item);
-            if (!rs.length) return { rating: +(item.rating || 0), count: +(item.reviews || 0) };
+            if (!rs.length) return { rating: 0, count: 0, fromCsv: false };
             var sum = 0;
             rs.forEach(function (r) { sum += +r.rating || 0; });
-            return { rating: sum / rs.length, count: rs.length };
+            return { rating: sum / rs.length, count: rs.length, fromCsv: false };
         }
 
         // --- 住所 -----------------------------------------------------------
@@ -594,6 +643,11 @@
             var sc = scoreOf(item);
             var revs = reviewsOf(item);
 
+            // 住居と範囲は、そもそも評価をつけない決まりなので星もクチコミタブも
+            // 出さない。それ以外は 0 件でも「0.0 (0)」と出す。まだ点数を
+            // 入れていないだけなのか、つけない決まりなのかを見分けられるように。
+            var rated = kind !== 'area' && item.category !== 'house';
+
             ctx.selected = item;
             selSource.clear();
             selSource.addFeature(new ol.Feature({
@@ -630,11 +684,13 @@
 
             head.appendChild(el('h2', 'guide-place-name', item.name));
 
-            var rate = el('div', 'guide-place-rate');
-            rate.innerHTML =
-                '<b>' + sc.rating.toFixed(1) + '</b>' + starsHtml(sc.rating) +
-                '<span class="guide-place-count">(' + sc.count.toLocaleString('ja-JP') + ')</span>';
-            head.appendChild(rate);
+            if (rated) {
+                var rate = el('div', 'guide-place-rate');
+                rate.innerHTML =
+                    '<b>' + sc.rating.toFixed(1) + '</b>' + starsHtml(sc.rating) +
+                    '<span class="guide-place-count">(' + sc.count.toLocaleString('ja-JP') + ')</span>';
+                head.appendChild(rate);
+            }
 
             var meta = el('div', 'guide-place-meta');
             if (isDraft)         meta.appendChild(tag('下書き', '#8b8b93'));
@@ -684,30 +740,36 @@
             acts.appendChild(copy);
 
             // --- タブ ---
-            var tabs = el('div', 'guide-tabs');
-            tabs.setAttribute('role', 'tablist');
-            body.appendChild(tabs);
-
+            // 評価を持たない地点はタブが「概要」1枚きりになるので、
+            // タブの帯そのものを出さない。
             var panes = el('div', 'guide-panes');
-            body.appendChild(panes);
-
             var overview = el('div', 'guide-pane');
             var reviewsPane = el('div', 'guide-pane');
-            panes.appendChild(overview);
-            panes.appendChild(reviewsPane);
 
-            [['概要', overview], ['クチコミ', reviewsPane]].forEach(function (t, i) {
-                var b = el('button', 'guide-tab' + (i === 0 ? ' is-on' : ''), t[0]);
-                b.setAttribute('role', 'tab');
-                if (i !== 0) t[1].classList.add('is-hidden');
-                b.onclick = function () {
-                    tabs.querySelectorAll('.guide-tab').forEach(function (x) { x.classList.remove('is-on'); });
-                    panes.querySelectorAll('.guide-pane').forEach(function (x) { x.classList.add('is-hidden'); });
-                    b.classList.add('is-on');
-                    t[1].classList.remove('is-hidden');
-                };
-                tabs.appendChild(b);
-            });
+            if (rated) {
+                var tabs = el('div', 'guide-tabs');
+                tabs.setAttribute('role', 'tablist');
+                body.appendChild(tabs);
+                body.appendChild(panes);
+                panes.appendChild(overview);
+                panes.appendChild(reviewsPane);
+
+                [['概要', overview], ['クチコミ', reviewsPane]].forEach(function (t, i) {
+                    var b = el('button', 'guide-tab' + (i === 0 ? ' is-on' : ''), t[0]);
+                    b.setAttribute('role', 'tab');
+                    if (i !== 0) t[1].classList.add('is-hidden');
+                    b.onclick = function () {
+                        tabs.querySelectorAll('.guide-tab').forEach(function (x) { x.classList.remove('is-on'); });
+                        panes.querySelectorAll('.guide-pane').forEach(function (x) { x.classList.add('is-hidden'); });
+                        b.classList.add('is-on');
+                        t[1].classList.remove('is-hidden');
+                    };
+                    tabs.appendChild(b);
+                });
+            } else {
+                body.appendChild(panes);
+                panes.appendChild(overview);
+            }
 
             // --- 概要タブ: メモと住所 ---
             var rows = el('div', 'guide-place-rows');
@@ -761,20 +823,23 @@
         // --- クチコミタブの中身 ----------------------------------------------
 
         function buildReviews(pane, item, revs, sc) {
-            // 星ごとの本数を横棒で出す（Google マップと同じ並びで 5 が上）
+            // 星ごとの本数を横棒で出す（Google マップと同じ並びで 5 が上）。
+            // 件数が CSV 由来なら、本文が何件あろうとその件数ぶんの形を作る。
+            // 本文しか無い地点だけ、実際の本数を数える。
             var counts = [0, 0, 0, 0, 0];
-            revs.forEach(function (r) {
-                var n = Math.round(+r.rating || 0);
-                if (n >= 1 && n <= 5) counts[n - 1]++;
-            });
+            if (sc.fromCsv) {
+                if (sc.count > 0) counts = synthCounts(sc.rating, sc.count, item.name);
+            } else {
+                revs.forEach(function (r) {
+                    var n = Math.round(+r.rating || 0);
+                    if (n >= 1 && n <= 5) counts[n - 1]++;
+                });
+            }
             var max = Math.max.apply(null, counts.concat([1]));
 
             var sum = el('div', 'guide-rv-sum');
 
-            // 本文が 1 件も無いときは棒グラフを出さない。
-            // 点数と件数だけ CSV に入っている状態だと、全部ゼロの棒の横に
-            // 「7,483件のクチコミ」と出て、壊れているように見えるため。
-            if (revs.length) {
+            if (counts.some(function (c) { return c > 0; })) {
                 var bars = el('div', 'guide-rv-bars');
                 for (var n = 5; n >= 1; n--) {
                     var row = el('div', 'guide-rv-bar');
