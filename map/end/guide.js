@@ -183,6 +183,9 @@
         buildListPanel(ctx);
         buildBackLink();
         if (ctx.edit) buildEditUi(ctx);
+
+        // 共有リンク（#p=地点名）で開かれたときは、その地点を選んだ状態にする
+        ctx.openFromHash();
     }
 
     // ------------------------------------------------------------ レイヤー
@@ -378,24 +381,111 @@
             .filter(function (l) { return !!l; });
     }
 
-    // ---------------------------------------------------------- ポップアップ
+    // -------------------------------------------------------------- 情報カード
+
+    /*
+     * 地点をタップすると画面の端から出てくるカード。Google マップの
+     * 「場所の詳細」に寄せてある。
+     *
+     *   横長の画面（PC）  … 画面の左端に縦長で出す
+     *   縦長の画面（スマホ）… 下から出るシート。つまみを上下にドラッグできる
+     *
+     * 以前の吹き出しをやめた理由は 2 つ。ピンの真上に出るので指と吹き出しで
+     * 肝心の場所が隠れること、写真やメモを載せる面積が取れないこと。
+     *
+     * 地図の操作ボタン類は黒いが、カードだけは白い。読み物なので
+     * 明るいほうが読みやすく、地図の上に浮いていることも分かりやすい。
+     */
+
+    var DIM_LABEL = { overworld: 'オーバーワールド', nether: 'ネザー', end: 'ジ・エンド' };
+
+    // 写真がまだ無い地点に出す代替画像。guide.css などと同じ場所に置いてあり、
+    // render-map.ps1 が地図フォルダへ配る。
+    var PLACEHOLDER = 'place-placeholder.png';
+
+    function isNarrow() {
+        return window.matchMedia('(max-width: 640px)').matches;
+    }
+
+    // 点が多角形の内側にあるか。住所として「どの街の中か」を出すのに使う。
+    // 交差数判定（レイキャスティング）。
+    function inPolygon(x, z, pts) {
+        var inside = false;
+        for (var i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+            var xi = pts[i][0], zi = pts[i][1], xj = pts[j][0], zj = pts[j][1];
+            if ((zi > z) !== (zj > z) && x < (xj - xi) * (z - zi) / (zj - zi) + xi) inside = !inside;
+        }
+        return inside;
+    }
+
+    function svg(paths, attrs) {
+        return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+               'stroke-linecap="round" stroke-linejoin="round" ' + (attrs || '') + '>' + paths + '</svg>';
+    }
+
+    // 星 5 つ。半端な評価はグラデーションで部分的に塗る。
+    var starSeq = 0;
+    function starsHtml(rating, cls) {
+        var out = '<span class="guide-stars ' + (cls || '') + '" aria-hidden="true">';
+        for (var i = 0; i < 5; i++) {
+            var f = Math.max(0, Math.min(1, rating - i));
+            var id = 'gst' + (++starSeq);
+            out += '<svg viewBox="0 0 24 24" class="guide-star">' +
+                '<defs><linearGradient id="' + id + '">' +
+                '<stop offset="' + (f * 100) + '%" stop-color="var(--gp-star)"/>' +
+                '<stop offset="' + (f * 100) + '%" stop-color="var(--gp-star-off)"/>' +
+                '</linearGradient></defs>' +
+                '<path fill="url(#' + id + ')" d="M12 2.6l2.9 5.9 6.5.95-4.7 4.6 1.1 6.5L12 17.5 6.2 20.5l1.1-6.5-4.7-4.6 6.5-.95z"/>' +
+                '</svg>';
+        }
+        return out + '</span>';
+    }
+
+    // 選択中の地点に立てるピン。カテゴリ色の丸（＝ただの地点）と紛れないよう、
+    // 地図でおなじみの赤いしずく型にしてある。色は選択中である印なので固定。
+    var MARKER_URL = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="30" height="44" viewBox="0 0 30 44">' +
+        '<ellipse cx="15" cy="40.6" rx="5.2" ry="2.1" fill="rgba(0,0,0,.34)"/>' +
+        '<path d="M15 40.5S27.2 24.4 27.2 14.9A12.2 12.2 0 1 0 2.8 14.9C2.8 24.4 15 40.5 15 40.5z" ' +
+        'fill="#ea4335" stroke="rgba(120,20,14,.55)" stroke-width="0.8"/>' +
+        '<circle cx="15" cy="14.6" r="4.4" fill="#b3241b"/></svg>');
+
+    // クチコミの人物アイコン。名前から色を決めて頭文字を出す。
+    var AVATAR_COLORS = ['#d93025', '#1a73e8', '#188038', '#e37400', '#9334e6', '#0b8a68', '#c5221f'];
+    function avatarOf(name) {
+        var h = 0;
+        for (var i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 100000;
+        return { color: AVATAR_COLORS[h % AVATAR_COLORS.length], initial: (name || '?').trim().charAt(0) };
+    }
 
     function buildPopup(ctx) {
-        var popupEl = el('div', 'guide-popup');
-        popupEl.style.display = 'none';
-        document.body.appendChild(popupEl);
+        // --- 選択中のピンを立てるレイヤー -----------------------------------
+        var selSource = new ol.source.Vector();
+        ctx.olMap.addLayer(new ol.layer.Vector({
+            source: selSource, zIndex: 70,
+            // 印は 1 種類なのでスタイルを使い回す
+            style: new ol.style.Style({
+                image: new ol.style.Icon({
+                    src: MARKER_URL, anchor: [0.5, 1],
+                    anchorXUnits: 'fraction', anchorYUnits: 'fraction'
+                })
+            })
+        }));
 
-        var overlay = new ol.Overlay({
-            // 丸の中心が地点なので、吹き出しは丸の半径ぶんだけ上に置く
-            element: popupEl, positioning: 'bottom-center', offset: [0, -16],
-            stopEvent: true, autoPan: { animation: { duration: 200 }, margin: 24 }
-        });
-        ctx.olMap.addOverlay(overlay);
+        // --- カードの骨組み -------------------------------------------------
+        var card = el('aside', 'guide-place is-closed');
+        card.setAttribute('role', 'dialog');
+        card.innerHTML =
+            '<div class="guide-place-grip" aria-hidden="true"><span></span></div>' +
+            '<button class="guide-place-close" aria-label="閉じる">' +
+                svg('<path d="M18 6L6 18M6 6l12 12"/>', 'width="19" height="19" stroke-width="2.3"') +
+            '</button>' +
+            '<div class="guide-place-scroll"></div>';
+        document.body.appendChild(card);
 
-        ctx.closePopup = function () {
-            popupEl.style.display = 'none';
-            overlay.setPosition(undefined);
-        };
+        var scroll = card.querySelector('.guide-place-scroll');
+        var grip   = card.querySelector('.guide-place-grip');
+        card.querySelector('.guide-place-close').onclick = function () { ctx.closePopup(); };
 
         // 範囲の代表点（ラベルが出る位置）
         function anchorOf(item, kind) {
@@ -404,53 +494,246 @@
             item.points.forEach(function (p) { sx += p[0]; sz += p[1]; });
             return [Math.round(sx / item.points.length), Math.round(sz / item.points.length)];
         }
+        ctx.anchorOf = anchorOf;
+
+        // --- クチコミ --------------------------------------------------------
+
+        // guide.reviews.csv から生成した一覧。地点名で引く。
+        function reviewsOf(item) {
+            var all = ctx.config.reviews || {};
+            return all[item.name] || [];
+        }
+
+        // 評価は基本クチコミの平均。まだ 1 件も無ければ CSV の rating 列を使う。
+        function scoreOf(item) {
+            var rs = reviewsOf(item);
+            if (!rs.length) return { rating: +(item.rating || 0), count: +(item.reviews || 0) };
+            var sum = 0;
+            rs.forEach(function (r) { sum += +r.rating || 0; });
+            return { rating: sum / rs.length, count: rs.length };
+        }
+
+        // --- 住所 -----------------------------------------------------------
+
+        // 「どの街の中か」＋座標。Google マップの住所欄にあたるもの。
+        function addressOf(item, kind, a) {
+            var town = null;
+            if (kind === 'point') {
+                ctx.areas.forEach(function (ar) {
+                    if (!town && ar.points && inPolygon(item.x, item.z, ar.points)) town = ar.name;
+                });
+            }
+            var coord = (kind === 'point' && item.y != null)
+                ? 'X ' + item.x + '  Y ' + item.y + '  Z ' + item.z
+                : 'X ' + a[0] + '  Z ' + a[1];
+            return { town: town || (DIM_LABEL[ctx.dim] || ''), coord: coord };
+        }
+
+        // --- 共有 -----------------------------------------------------------
+
+        // 共有 URL。uNmINeD 本体がハッシュを URLSearchParams として読むので
+        // それに合わせ、p= に地点名を入れる（rx/rz など既存の値は壊さない）。
+        function shareUrl(item) {
+            var u = new URL(location.href);
+            var q = new URLSearchParams(u.hash.replace(/^#/, ''));
+            q.set('p', item.name);
+            u.hash = '#' + q.toString();
+            return u.toString();
+        }
+
+        function syncHash(item) {
+            try {
+                var u = new URL(location.href);
+                var q = new URLSearchParams(u.hash.replace(/^#/, ''));
+                if (item) { q.set('p', item.name); } else { q.delete('p'); }
+                var s = q.toString();
+                history.replaceState(null, '', u.pathname + u.search + (s ? '#' + s : ''));
+            } catch (e) { /* file:// などでは諦める */ }
+        }
+
+        // --- 開閉 -----------------------------------------------------------
+
+        ctx.selected = null;
+
+        ctx.closePopup = function () {
+            if (!ctx.selected) return;
+            ctx.selected = null;
+            selSource.clear();
+            card.classList.add('is-closed');
+            card.classList.remove('is-full');
+            document.body.classList.remove('guide-with-place');
+            syncHash(null);
+        };
+
+        // 地図をずらして、カードに隠れない位置へ地点を持ってくる。
+        function bringIntoView(a) {
+            var view = ctx.olMap.getView();
+            var size = ctx.olMap.getSize();
+            if (!size) return;
+            var coord = ol.proj.transform(a, ctx.map.dataProjection, ctx.map.viewProjection);
+            var px, py;
+            if (isNarrow()) {
+                px = size[0] / 2;
+                py = (size[1] - Math.min(card.offsetHeight, size[1] * 0.7)) / 2;
+            } else {
+                px = (size[0] + card.offsetWidth) / 2;
+                py = size[1] / 2;
+            }
+            var res = view.getResolution();
+            view.animate({
+                center: [coord[0] - (px - size[0] / 2) * res, coord[1] + (py - size[1] / 2) * res],
+                duration: 260
+            });
+        }
+        ctx.bringIntoView = bringIntoView;
 
         ctx.openPopup = function (item, kind, isDraft) {
             var cat = categoryOf(item, ctx.config);
-            popupEl.innerHTML = '';
-
-            var close = el('button', 'guide-popup-close', '×');
-            close.setAttribute('aria-label', '閉じる');
-            close.onclick = ctx.closePopup;
-            popupEl.appendChild(close);
-
-            if (isDraft) {
-                var d = el('span', 'guide-chip', '下書き');
-                d.style.backgroundColor = '#8b8b93';
-                popupEl.appendChild(d);
-            }
-            if (kind === 'area') {
-                var k = el('span', 'guide-chip', '範囲');
-                k.style.backgroundColor = '#5b5b66';
-                popupEl.appendChild(k);
-            }
-            if (cat.label) {
-                var chip = el('span', 'guide-chip', cat.label);
-                chip.style.backgroundColor = cat.color;
-                popupEl.appendChild(chip);
-            }
-
-            popupEl.appendChild(el('div', 'guide-popup-title', item.name));
-            if (item.description) popupEl.appendChild(el('div', 'guide-popup-desc', item.description));
-
             var a = anchorOf(item, kind);
-            var coords = el('div', 'guide-popup-coords');
-            coords.appendChild(el('span', null, kind === 'area'
-                ? '中心 X ' + a[0] + '  Z ' + a[1] + '  （' + item.points.length + '頂点）'
-                // Minecraft の座標表記に合わせて X Y Z の順。Y が無いときは X Z。
-                : (item.y != null
-                    ? 'X ' + item.x + '  Y ' + item.y + '  Z ' + item.z
-                    : 'X ' + item.x + '  Z ' + item.z)));
+            var addr = addressOf(item, kind, a);
+            var sc = scoreOf(item);
+            var revs = reviewsOf(item);
 
-            var copy = el('button', 'guide-copy', 'コピー');
+            ctx.selected = item;
+            selSource.clear();
+            selSource.addFeature(new ol.Feature({
+                geometry: new ol.geom.Point(
+                    ol.proj.transform(a, ctx.map.dataProjection, ctx.map.viewProjection))
+            }));
+
+            scroll.innerHTML = '';
+
+            // 中身は縦一列。PC は 写真→名前→…、スマホは 名前→…→写真 と
+            // 並びが変わるが、順番は CSS の order で入れ替えている。
+            var body = el('div', 'guide-place-body');
+            scroll.appendChild(body);
+
+            // --- 写真 ---
+            // まだ用意していない地点は共通の代替画像を出す。
+            // 画像は地図のフォルダに一緒に置いてあるので相対パスでよい。
+            var hero = el('div', 'guide-hero');
+            var img = el('img');
+            img.alt = item.image ? item.name : '';
+            img.loading = 'lazy';
+            if (!item.image) hero.classList.add('is-empty');
+            // 指定された画像が読めなかったときも黙って代替へ落とす
+            img.onerror = function () {
+                if (img.src.indexOf(PLACEHOLDER) === -1) { hero.classList.add('is-empty'); img.src = PLACEHOLDER; }
+            };
+            img.src = item.image || PLACEHOLDER;
+            hero.appendChild(img);
+            body.appendChild(hero);
+
+            // --- 名前・評価・カテゴリ ---
+            var head = el('div', 'guide-place-head');
+            body.appendChild(head);
+
+            head.appendChild(el('h2', 'guide-place-name', item.name));
+
+            var rate = el('div', 'guide-place-rate');
+            rate.innerHTML =
+                '<b>' + sc.rating.toFixed(1) + '</b>' + starsHtml(sc.rating) +
+                '<span class="guide-place-count">(' + sc.count.toLocaleString('ja-JP') + ')</span>';
+            head.appendChild(rate);
+
+            var meta = el('div', 'guide-place-meta');
+            if (isDraft)         meta.appendChild(tag('下書き', '#8b8b93'));
+            if (kind === 'area') meta.appendChild(tag('範囲', '#6b7280'));
+            meta.appendChild(tag(cat.label || '未分類', cat.color));
+            head.appendChild(meta);
+
+            function tag(text, color) {
+                var t = el('span', 'guide-place-tag', text);
+                t.style.setProperty('--tag', color);
+                return t;
+            }
+
+            // --- 操作ボタン ---
+            var acts = el('div', 'guide-place-acts');
+            body.appendChild(acts);
+
+            var share = el('button', 'guide-act is-primary');
+            share.innerHTML = svg('<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/>' +
+                '<circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>',
+                'width="17" height="17"') + '<span>共有</span>';
+            share.onclick = function () {
+                var url = shareUrl(item);
+                var s = share.querySelector('span');
+                if (navigator.share) {
+                    navigator.share({ title: item.name, url: url }).then(function () {}, function () {});
+                } else {
+                    copyText(url, function () {
+                        s.textContent = 'コピーしました';
+                        setTimeout(function () { s.textContent = '共有'; }, 1600);
+                    });
+                }
+            };
+            acts.appendChild(share);
+
+            var copy = el('button', 'guide-act');
+            copy.innerHTML = svg('<rect x="9" y="9" width="12" height="12" rx="2.2"/>' +
+                '<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+                'width="17" height="17"') + '<span>座標をコピー</span>';
             copy.onclick = function () {
                 copyText(a[0] + ' ' + (kind === 'point' && item.y != null ? item.y + ' ' : '') + a[1], function () {
-                    copy.textContent = 'コピー済';
-                    setTimeout(function () { copy.textContent = 'コピー'; }, 1400);
+                    var s = copy.querySelector('span');
+                    s.textContent = 'コピーしました';
+                    setTimeout(function () { s.textContent = '座標をコピー'; }, 1600);
                 });
             };
-            coords.appendChild(copy);
-            popupEl.appendChild(coords);
+            acts.appendChild(copy);
+
+            // --- タブ ---
+            var tabs = el('div', 'guide-tabs');
+            tabs.setAttribute('role', 'tablist');
+            body.appendChild(tabs);
+
+            var panes = el('div', 'guide-panes');
+            body.appendChild(panes);
+
+            var overview = el('div', 'guide-pane');
+            var reviewsPane = el('div', 'guide-pane');
+            panes.appendChild(overview);
+            panes.appendChild(reviewsPane);
+
+            [['概要', overview], ['クチコミ', reviewsPane]].forEach(function (t, i) {
+                var b = el('button', 'guide-tab' + (i === 0 ? ' is-on' : ''), t[0]);
+                b.setAttribute('role', 'tab');
+                if (i !== 0) t[1].classList.add('is-hidden');
+                b.onclick = function () {
+                    tabs.querySelectorAll('.guide-tab').forEach(function (x) { x.classList.remove('is-on'); });
+                    panes.querySelectorAll('.guide-pane').forEach(function (x) { x.classList.add('is-hidden'); });
+                    b.classList.add('is-on');
+                    t[1].classList.remove('is-hidden');
+                };
+                tabs.appendChild(b);
+            });
+
+            // --- 概要タブ: メモと住所 ---
+            var rows = el('div', 'guide-place-rows');
+            overview.appendChild(rows);
+
+            function addRow(icon, main, sub) {
+                var r = el('div', 'guide-place-row');
+                var ic = el('div', 'guide-place-ico');
+                ic.innerHTML = svg(icon, 'width="19" height="19"');
+                r.appendChild(ic);
+                var tx = el('div', 'guide-place-rowtext');
+                tx.appendChild(el('div', 'guide-place-rowmain', main));
+                if (sub) tx.appendChild(el('div', 'guide-place-rowsub', sub));
+                r.appendChild(tx);
+                rows.appendChild(r);
+                return r;
+            }
+
+            addRow('<path d="M4 5h16M4 10h16M4 15h11"/><path d="M4 20h7"/>',
+                item.description || 'メモはまだありません', '')
+                .classList.add(item.description ? 'has-text' : 'is-empty');
+
+            addRow('<path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>',
+                addr.coord,
+                addr.town + (kind === 'area' ? '（' + item.points.length + '頂点）' : ''))
+                .classList.add('is-addr');
 
             if (isDraft) {
                 var del = el('button', 'guide-danger', 'この下書きを削除');
@@ -462,13 +745,193 @@
                     ctx.refreshAll();
                     ctx.closePopup();
                 };
-                popupEl.appendChild(del);
+                overview.appendChild(del);
             }
 
-            popupEl.style.display = 'block';
-            overlay.setPosition(ol.proj.transform(a, ctx.map.dataProjection, ctx.map.viewProjection));
+            // --- クチコミタブ ---
+            buildReviews(reviewsPane, item, revs, sc);
+
+            scroll.scrollTop = 0;
+            card.classList.remove('is-closed', 'is-full');
+            document.body.classList.add('guide-with-place');
+            syncHash(item);
+            bringIntoView(a);
         };
-        ctx.anchorOf = anchorOf;
+
+        // --- クチコミタブの中身 ----------------------------------------------
+
+        function buildReviews(pane, item, revs, sc) {
+            // 星ごとの本数を横棒で出す（Google マップと同じ並びで 5 が上）
+            var counts = [0, 0, 0, 0, 0];
+            revs.forEach(function (r) {
+                var n = Math.round(+r.rating || 0);
+                if (n >= 1 && n <= 5) counts[n - 1]++;
+            });
+            var max = Math.max.apply(null, counts.concat([1]));
+
+            var sum = el('div', 'guide-rv-sum');
+            var bars = el('div', 'guide-rv-bars');
+            for (var n = 5; n >= 1; n--) {
+                var row = el('div', 'guide-rv-bar');
+                row.appendChild(el('span', 'guide-rv-barn', String(n)));
+                var track = el('span', 'guide-rv-track');
+                var fill = el('span', 'guide-rv-fill');
+                fill.style.width = (counts[n - 1] / max * 100) + '%';
+                track.appendChild(fill);
+                row.appendChild(track);
+                bars.appendChild(row);
+            }
+            sum.appendChild(bars);
+
+            var big = el('div', 'guide-rv-big');
+            big.innerHTML = '<b>' + sc.rating.toFixed(1) + '</b>' + starsHtml(sc.rating, 'is-lg') +
+                '<span>' + sc.count.toLocaleString('ja-JP') + '件のクチコミ</span>';
+            sum.appendChild(big);
+            pane.appendChild(sum);
+
+            // 書き込みは受け取り先が無いので、CSV の 1 行を作って渡すだけにする。
+            // このサイトは静的で、地点も歴史も CSV を編集して作っているため。
+            var write = el('button', 'guide-rv-write');
+            write.innerHTML = svg('<path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3z"/>', 'width="16" height="16"') +
+                '<span>クチコミを書く</span>';
+            write.onclick = function () { toggleForm(); };
+            pane.appendChild(write);
+
+            var form = el('div', 'guide-rv-form is-hidden');
+            pane.appendChild(form);
+
+            var who = el('input', 'guide-rv-input');
+            who.placeholder = 'あなたの名前';
+            form.appendChild(who);
+
+            var stars = el('div', 'guide-rv-pick');
+            var picked = 5;
+            for (var s = 1; s <= 5; s++) {
+                (function (v) {
+                    var b = el('button', 'guide-rv-pickstar' + (v <= picked ? ' is-on' : ''), '★');
+                    b.onclick = function () {
+                        picked = v;
+                        [].forEach.call(stars.children, function (c, i) { c.classList.toggle('is-on', i < picked); });
+                    };
+                    stars.appendChild(b);
+                })(s);
+            }
+            form.appendChild(stars);
+
+            var text = el('textarea', 'guide-rv-input guide-rv-text');
+            text.placeholder = '感想を書く';
+            form.appendChild(text);
+
+            var send = el('button', 'guide-act is-primary guide-rv-send', 'コピーする');
+            send.onclick = function () {
+                var today = new Date();
+                var d = today.getFullYear() + '-' +
+                    ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+                var line = [item.name, who.value.trim() || '名無し', picked, d, text.value.trim()]
+                    .map(csvCell).join(',');
+                copyText(line, function () {
+                    send.textContent = 'コピーしました';
+                    setTimeout(function () { send.textContent = 'コピーする'; }, 2400);
+                });
+            };
+            form.appendChild(send);
+
+            form.appendChild(el('p', 'guide-rv-note', 'コピーして Discord で送ってください。'));
+
+            function toggleForm() {
+                form.classList.toggle('is-hidden');
+                if (!form.classList.contains('is-hidden')) who.focus();
+            }
+
+            // --- 一覧 ---
+            if (!revs.length) {
+                pane.appendChild(el('div', 'guide-rv-empty', 'まだクチコミはありません'));
+                return;
+            }
+
+            var list = el('div', 'guide-rv-list');
+            revs.forEach(function (r) {
+                var av = avatarOf(r.who || '?');
+                var it = el('div', 'guide-rv-item');
+
+                var top = el('div', 'guide-rv-who');
+                var ic = el('span', 'guide-rv-avatar', av.initial);
+                ic.style.backgroundColor = av.color;
+                top.appendChild(ic);
+                top.appendChild(el('span', 'guide-rv-name', r.who || '名無し'));
+                it.appendChild(top);
+
+                var line = el('div', 'guide-rv-line');
+                line.innerHTML = starsHtml(+r.rating || 0) +
+                    '<span class="guide-rv-date">' + (r.date || '') + '</span>';
+                it.appendChild(line);
+
+                if (r.text) it.appendChild(el('p', 'guide-rv-text-body', r.text));
+                list.appendChild(it);
+            });
+            pane.appendChild(list);
+        }
+
+        // --- スマホ: シートを上下にドラッグする ------------------------------
+
+        // つまみと空白部分だけで掴む。本文の上でやると中身がスクロールできない。
+        (function () {
+            var startY = null, startFull = false, moved = 0;
+
+            function down(e) {
+                if (!isNarrow()) return;
+                startY = e.clientY;
+                startFull = card.classList.contains('is-full');
+                moved = 0;
+                card.classList.add('is-dragging');
+                grip.setPointerCapture(e.pointerId);
+            }
+            function move(e) {
+                if (startY == null) return;
+                moved = e.clientY - startY;
+                // ドラッグ中だけ指に追従させる。離した時に class で落ち着かせる。
+                card.style.transform = 'translateY(' + Math.max(startFull ? 0 : -160, moved) + 'px)';
+            }
+            function up(e) {
+                if (startY == null) return;
+                card.style.transform = '';
+                card.classList.remove('is-dragging');
+                startY = null;
+                if (moved < -50) card.classList.add('is-full');
+                else if (moved > 90) {
+                    if (startFull) card.classList.remove('is-full');
+                    else ctx.closePopup();
+                }
+                try { grip.releasePointerCapture(e.pointerId); } catch (err) {}
+            }
+
+            grip.addEventListener('pointerdown', down);
+            grip.addEventListener('pointermove', move);
+            grip.addEventListener('pointerup', up);
+            grip.addEventListener('pointercancel', up);
+            // つまみのタップだけでも開け閉めできるように
+            grip.addEventListener('click', function () {
+                if (Math.abs(moved) < 6) card.classList.toggle('is-full');
+            });
+        })();
+
+        // --- 共有リンクで開かれたとき ----------------------------------------
+
+        ctx.openFromHash = function () {
+            var name;
+            try { name = new URLSearchParams(location.hash.replace(/^#/, '')).get('p'); }
+            catch (e) { return; }
+            if (!name) return;
+
+            var hit = null, kind = 'point';
+            ctx.points.forEach(function (p) { if (!hit && p.name === name) hit = p; });
+            if (!hit) { ctx.areas.forEach(function (x) { if (!hit && x.name === name) { hit = x; kind = 'area'; } }); }
+            if (!hit) return;
+
+            var view = ctx.olMap.getView();
+            if (view.getZoom() < 0) view.setZoom(0);
+            ctx.openPopup(hit, kind, false);   // 寄せるのは bringIntoView がやる
+        };
     }
 
     // ---------------------------------------------------------- 地図の操作
@@ -677,11 +1140,12 @@
             el_.appendChild(body);
 
             el_.onclick = function () {
-                ctx.map.center(a);
                 var view = ctx.olMap.getView();
                 if (view.getZoom() < 0) view.setZoom(0);
+                // 地図を寄せるのは openPopup（bringIntoView）に任せる。
+                // ここで center も呼ぶと、カードを避ける分だけ二度動いて見える。
                 ctx.openPopup(item, kind, isDraft);
-                if (window.matchMedia('(max-width: 640px)').matches) setOpen(false);
+                if (isNarrow()) setOpen(false);
             };
             return el_;
         }

@@ -1,116 +1,476 @@
 /* guide.css - 案内マップ機能（ピンのポップアップと地点一覧）のスタイル。
    スマホでの片手操作を前提に、タップ対象を 44px 以上確保している。 */
 
-.guide-popup,
+.guide-place,
 .guide-panel,
 .guide-toggle {
     font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
-    color: #f2f2f3;
     box-sizing: border-box;
 }
 
-.guide-popup *,
+/* 地図の操作系は黒。情報カードだけは白で、色は別に持っている。 */
+.guide-panel,
+.guide-toggle { color: #f2f2f3; }
+
+.guide-place *,
 .guide-panel * { box-sizing: border-box; }
 
-/* ---------------------------------------------------------- ポップアップ */
+/* -------------------------------------------------------------- 情報カード */
 
-.guide-popup {
-    position: relative;
-    min-width: 200px;
-    max-width: min(300px, calc(100vw - 32px));
-    padding: 14px 16px 12px;
-    background: rgba(24, 24, 27, .96);
-    border: 1px solid rgba(255, 255, 255, .14);
-    border-radius: 12px;
-    box-shadow: 0 10px 32px rgba(0, 0, 0, .5);
-    backdrop-filter: blur(8px);
+/* 地点をタップすると出てくる詳細カード。
+   PC は画面の左端に縦長、スマホは下から出るシート。
+
+   地図の操作ボタン類は黒だが、このカードだけは白い。読み物なので
+   明るいほうが読みやすく、地図の上に浮いていることも一目で分かる。
+   色はここの変数だけで決まるので、暗くしたくなったらここを書き換える。 */
+
+:root {
+    --guide-place-w: clamp(300px, 34vw, 400px);
+
+    --gp-bg:       #ffffff;
+    --gp-fg:       #1f1f21;
+    --gp-sub:      #5f6368;
+    --gp-faint:    #9aa0a6;
+    --gp-line:     #e4e6e9;
+    --gp-hover:    #f1f3f4;
+    --gp-accent:   #0b8a68;   /* サイトの緑を白地で読める濃さにしたもの */
+    --gp-accent-bg:#e8f5f0;
+    --gp-star:     #f5b400;
+    --gp-star-off: #dadce0;
 }
 
-/* 吹き出しの尻尾 */
-.guide-popup::after {
-    content: "";
+.guide-place {
     position: absolute;
-    left: 50%;
-    bottom: -8px;
-    width: 14px;
-    height: 14px;
-    margin-left: -7px;
-    background: rgba(24, 24, 27, .96);
-    border-right: 1px solid rgba(255, 255, 255, .14);
-    border-bottom: 1px solid rgba(255, 255, 255, .14);
-    transform: rotate(45deg);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1200;
+    display: flex;
+    flex-direction: column;
+    width: var(--guide-place-w);
+    color: var(--gp-fg);
+    background: var(--gp-bg);
+    box-shadow: 0 0 30px rgba(0, 0, 0, .45);
+    transition: transform .26s cubic-bezier(.22, .8, .3, 1), opacity .18s ease;
 }
 
-.guide-popup-close {
+.guide-place.is-closed {
+    transform: translateX(-101%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* スマホでシートを掴むつまみ。横長では出さない。 */
+.guide-place-grip { display: none; }
+
+.guide-place-close {
     position: absolute;
-    top: 4px;
-    right: 4px;
+    top: 10px;
+    right: 10px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 34px;
     height: 34px;
     padding: 0;
-    font-size: 20px;
-    line-height: 1;
-    color: rgba(255, 255, 255, .55);
-    background: none;
+    color: var(--gp-fg);
+    background: rgba(255, 255, 255, .88);
     border: 0;
-    border-radius: 8px;
+    border-radius: 50%;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     cursor: pointer;
+    backdrop-filter: blur(6px);
 }
-.guide-popup-close:hover { color: #fff; background: rgba(255, 255, 255, .1); }
+.guide-place-close:hover { background: #fff; }
 
-.guide-chip {
-    display: inline-block;
-    margin-bottom: 6px;
-    padding: 2px 8px;
-    font-size: 11px;
+.guide-place-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+.guide-place-body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- 写真 --- */
+
+.guide-hero {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: #eceff1;
+    overflow: hidden;
+}
+
+.guide-hero img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 写真がまだ無い地点 */
+.guide-hero.is-empty { background: #5b8ce4; }
+
+/* --- 名前・評価・カテゴリ --- */
+
+.guide-place-head { padding: 16px 18px 0; }
+
+.guide-place-name {
+    margin: 0;
+    padding-right: 34px;
+    font-size: 22px;
     font-weight: 700;
-    letter-spacing: .02em;
-    color: #fff;
-    border-radius: 999px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+    line-height: 1.3;
 }
 
-.guide-popup-title {
-    padding-right: 28px;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1.35;
-}
-
-.guide-popup-desc {
-    margin-top: 6px;
-    font-size: 13px;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, .78);
-    white-space: pre-wrap;
-}
-
-.guide-popup-coords {
+.guide-place-rate {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 10px;
-    padding-top: 9px;
-    font-size: 12px;
+    gap: 6px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--gp-sub);
+}
+.guide-place-rate b {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gp-fg);
     font-variant-numeric: tabular-nums;
-    color: rgba(255, 255, 255, .62);
-    border-top: 1px solid rgba(255, 255, 255, .1);
+}
+.guide-place-count { color: var(--gp-sub); }
+
+.guide-stars { display: inline-flex; gap: 1px; }
+.guide-star { width: 15px; height: 15px; flex: none; }
+.guide-stars.is-lg .guide-star { width: 17px; height: 17px; }
+
+.guide-place-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
 }
 
-.guide-copy {
-    flex: none;
-    min-height: 30px;
-    padding: 5px 11px;
-    font-size: 12px;
+.guide-place-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 11px 3px 9px;
+    font-size: 11.5px;
     font-weight: 600;
-    color: #f2f2f3;
-    background: rgba(255, 255, 255, .1);
-    border: 1px solid rgba(255, 255, 255, .16);
-    border-radius: 7px;
+    color: var(--gp-sub);
+    background: var(--gp-hover);
+    border-radius: 999px;
+}
+.guide-place-tag::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--tag, var(--gp-faint));
+}
+
+/* --- 操作ボタン --- */
+
+.guide-place-acts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 14px 18px 16px;
+}
+
+.guide-act {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 38px;
+    padding: 8px 16px;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--gp-accent);
+    background: var(--gp-accent-bg);
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.guide-act:hover { filter: brightness(.96); }
+.guide-act svg { flex: none; }
+
+.guide-act.is-primary {
+    color: #fff;
+    background: var(--gp-accent);
+}
+
+/* --- タブ --- */
+
+/* 中身をスクロールしてもタブは上に残す。写真が長いぶん、
+   クチコミを読んでいる最中に概要へ戻れなくなるのを防ぐ。 */
+.guide-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    gap: 2px;
+    padding: 0 8px;
+    background: var(--gp-bg);
+    border-bottom: 1px solid var(--gp-line);
+}
+
+.guide-tab {
+    flex: 1;
+    padding: 12px 6px 11px;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--gp-sub);
+    background: none;
+    border: 0;
+    border-bottom: 3px solid transparent;
     cursor: pointer;
 }
-.guide-copy:hover { background: rgba(255, 255, 255, .17); }
+.guide-tab:hover { background: var(--gp-hover); }
+.guide-tab.is-on {
+    color: var(--gp-accent);
+    border-bottom-color: var(--gp-accent);
+}
+
+.guide-pane { padding: 4px 18px 24px; }
+.guide-pane.is-hidden { display: none; }
+
+/* 下書きの削除ボタン（編集モードのみ）。白地用に色を振り直す。 */
+.guide-pane .guide-danger {
+    margin-top: 14px;
+    color: #c5221f;
+    background: #fce8e6;
+    border: 0;
+}
+.guide-pane .guide-danger:hover { background: #f9d9d6; }
+
+/* --- 概要タブ: メモ・住所 --- */
+
+.guide-place-row {
+    display: flex;
+    gap: 14px;
+    padding: 14px 2px;
+    border-bottom: 1px solid var(--gp-line);
+}
+.guide-place-row:last-child { border-bottom: 0; }
+
+.guide-place-ico {
+    flex: none;
+    display: flex;
+    padding-top: 1px;
+    color: var(--gp-sub);
+}
+
+.guide-place-rowtext { min-width: 0; }
+
+.guide-place-rowmain {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--gp-fg);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+.guide-place-row.is-empty .guide-place-rowmain { color: var(--gp-faint); }
+.guide-place-row.is-addr .guide-place-rowmain {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: .01em;
+}
+
+.guide-place-rowsub {
+    margin-top: 3px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--gp-sub);
+}
+
+/* --- クチコミタブ --- */
+
+.guide-rv-sum {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 2px 16px;
+}
+
+.guide-rv-bars { flex: 1; min-width: 0; }
+
+.guide-rv-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+.guide-rv-barn {
+    width: 8px;
+    font-size: 11.5px;
+    color: var(--gp-sub);
+    text-align: right;
+}
+.guide-rv-track {
+    flex: 1;
+    height: 9px;
+    background: #eceff1;
+    border-radius: 999px;
+    overflow: hidden;
+}
+.guide-rv-fill {
+    display: block;
+    height: 100%;
+    background: var(--gp-star);
+    border-radius: 999px;
+}
+
+.guide-rv-big {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    text-align: center;
+}
+.guide-rv-big b { font-size: 34px; font-weight: 400; line-height: 1.1; }
+.guide-rv-big span { font-size: 11.5px; color: var(--gp-sub); }
+
+.guide-rv-write {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto 4px;
+    padding: 9px 18px;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--gp-accent);
+    background: var(--gp-accent-bg);
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+}
+.guide-rv-write:hover { filter: brightness(.96); }
+
+/* 書き込みフォーム。静的サイトなので CSV の 1 行を作って渡すだけ。 */
+.guide-rv-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 12px 0 4px;
+    padding: 14px;
+    background: #f8f9fa;
+    border: 1px solid var(--gp-line);
+    border-radius: 12px;
+}
+.guide-rv-form.is-hidden { display: none; }
+
+.guide-rv-input {
+    width: 100%;
+    padding: 9px 11px;
+    font: inherit;
+    font-size: 13.5px;
+    color: var(--gp-fg);
+    background: #fff;
+    border: 1px solid var(--gp-line);
+    border-radius: 8px;
+    outline: none;
+}
+.guide-rv-input:focus { border-color: var(--gp-accent); }
+.guide-rv-text { min-height: 74px; resize: vertical; line-height: 1.6; }
+
+.guide-rv-pick { display: flex; gap: 2px; }
+.guide-rv-pickstar {
+    padding: 2px 3px;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--gp-star-off);
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+.guide-rv-pickstar.is-on { color: var(--gp-star); }
+
+.guide-rv-send { justify-content: center; }
+
+.guide-rv-note {
+    margin: 0;
+    font-size: 11.5px;
+    line-height: 1.6;
+    color: var(--gp-sub);
+}
+
+.guide-rv-empty {
+    padding: 26px 0;
+    font-size: 13px;
+    color: var(--gp-faint);
+    text-align: center;
+}
+
+.guide-rv-list { margin-top: 10px; }
+
+.guide-rv-item {
+    padding: 16px 0;
+    border-top: 1px solid var(--gp-line);
+}
+
+.guide-rv-who { display: flex; align-items: center; gap: 10px; }
+
+.guide-rv-avatar {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    border-radius: 50%;
+}
+.guide-rv-name { font-size: 13.5px; font-weight: 600; }
+
+.guide-rv-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+.guide-rv-date { font-size: 12px; color: var(--gp-sub); }
+
+.guide-rv-text-body {
+    margin: 8px 0 0;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--gp-fg);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* --- カードを開いている間、地図の操作系を右へ逃がす --- */
+
+.ol-zoom,
+.ol-scale-line,
+.guide-back,
+.guide-toggle,
+.guide-panel {
+    transition: transform .26s cubic-bezier(.22, .8, .3, 1);
+}
+
+body.guide-with-place .ol-zoom,
+body.guide-with-place .ol-scale-line,
+body.guide-with-place .guide-back,
+body.guide-with-place .guide-toggle,
+body.guide-with-place .guide-panel {
+    transform: translateX(var(--guide-place-w));
+}
+body.guide-with-place .guide-panel {
+    max-width: calc(100vw - var(--guide-place-w) - 24px);
+}
 
 /* ------------------------------------------------------------ 一覧パネル */
 
@@ -535,12 +895,79 @@
         padding-bottom: env(safe-area-inset-bottom);
     }
     .guide-search { font-size: 16px; }  /* iOS Safari の自動ズーム防止 */
-    .guide-popup { max-width: calc(100vw - 24px); }
 
     .guide-editbar { justify-content: center; padding: 8px 10px; }
     .guide-editbar-hint { display: none; }
 
     /* 編集バーが下辺中央に居るので、一覧シートはそれより上に出す */
     .guide-panel { bottom: 68px; }
+
+    /* --- 情報カードは下から出るシートにする ------------------------------ */
+
+    .guide-place {
+        top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: auto;
+        /* 既定はのぞき見の高さ。つまみを上へ引くと is-full になる */
+        max-height: 56vh;
+        border-radius: 18px 18px 0 0;
+        box-shadow: 0 -8px 34px rgba(0, 0, 0, .45);
+        padding-bottom: env(safe-area-inset-bottom);
+        overflow: hidden;
+        transition: transform .28s cubic-bezier(.22, .8, .3, 1),
+                    max-height .28s cubic-bezier(.22, .8, .3, 1);
+    }
+    .guide-place.is-closed { transform: translateY(101%); opacity: 1; }
+    .guide-place.is-full { max-height: 92vh; }
+    .guide-place.is-dragging { transition: none; }
+
+    /* 指で掴む所。ここだけ touch-action を切らないと、
+       上下ドラッグがページのスクロールに取られる。 */
+    .guide-place-grip {
+        display: block;
+        flex: none;
+        padding: 9px 0 4px;
+        touch-action: none;
+        cursor: grab;
+    }
+    .guide-place-grip span {
+        display: block;
+        width: 38px;
+        height: 4px;
+        margin: 0 auto;
+        border-radius: 999px;
+        background: #d3d6da;
+    }
+
+    .guide-place-close { top: 12px; right: 12px; box-shadow: none; background: var(--gp-hover); }
+    .guide-place-head { padding: 6px 16px 0; }
+    .guide-place-name { font-size: 20px; }
+    .guide-place-acts { padding: 14px 16px 16px; }
+    .guide-tabs { padding: 0 6px; }
+    .guide-pane { padding: 4px 16px 24px; }
+
+    /* 縦画面は、まず名前と評価と操作が見えてほしい。写真はその下。 */
+    .guide-place-head  { order: 1; }
+    .guide-place-acts  { order: 2; }
+    .guide-hero        { order: 3; }
+    .guide-tabs        { order: 4; }
+    .guide-panes       { order: 5; }
+
+    .guide-hero {
+        margin: 4px 16px 0;
+        border-radius: 14px;
+    }
+
+    /* 横へ逃がすのは PC だけ。シートは地図の下辺にしか掛からない。 */
+    body.guide-with-place .ol-zoom,
+    body.guide-with-place .ol-scale-line,
+    body.guide-with-place .guide-back,
+    body.guide-with-place .guide-toggle,
+    body.guide-with-place .guide-panel {
+        transform: none;
+    }
+    body.guide-with-place .guide-panel { max-width: none; }
 }
 
