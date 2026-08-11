@@ -1,7 +1,7 @@
 /* 自動生成。編集しても render-map.ps1 の実行で上書きされる。
    地点は guide.locations.csv、範囲は guide.areas.csv、
    カテゴリは guide.categories.csv を編集すること。
-   生成元: 地点 87 件 / 範囲 1 件 / カテゴリ 15 件 */
+   生成元: 地点 93 件 / 範囲 1 件 / カテゴリ 15 件 */
 
 UnminedGuideLocations = {
 
@@ -110,7 +110,13 @@ UnminedGuideLocations = {
         { name: "ふぐり邸2", x: -886, z: 438, category: "build", dimension: "overworld" },
         { name: "古代遺跡発掘場所", x: -4611, z: 205, category: "structure", dimension: "overworld" },
         { name: "オサムテラス", x: -1089, z: 580, category: "build", dimension: "overworld" },
-        { name: "アイテム慰霊碑", x: -1115, z: 581, category: "structure", dimension: "overworld" }
+        { name: "アイテム慰霊碑", x: -1115, z: 581, category: "structure", dimension: "overworld" },
+        { name: "鮭池荘", x: -1094, z: 500, category: "build", dimension: "overworld" },
+        { name: "鮭池", x: -1106, z: 511, category: "structure", dimension: "overworld" },
+        { name: "つありすとインフォメーション", x: -882, z: 396, category: "public", dimension: "overworld" },
+        { name: "コズマ駅入口", x: -871, z: 383, category: "station", dimension: "overworld" },
+        { name: "村人ハウス", x: -858, z: 441, category: "build", dimension: "overworld" },
+        { name: "ジモティ爆破慰霊碑", x: -958, z: 372, category: "structure", dimension: "overworld" }
     ],
 
     areas: [
