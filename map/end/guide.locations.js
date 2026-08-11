@@ -1,7 +1,7 @@
 /* 自動生成。編集しても render-map.ps1 の実行で上書きされる。
    地点は guide.locations.csv、範囲は guide.areas.csv、
    カテゴリは guide.categories.csv を編集すること。
-   生成元: 地点 93 件 / 範囲 1 件 / カテゴリ 15 件 */
+   生成元: 地点 95 件 / 範囲 1 件 / カテゴリ 15 件 */
 
 UnminedGuideLocations = {
 
@@ -116,7 +116,9 @@ UnminedGuideLocations = {
         { name: "つありすとインフォメーション", x: -882, z: 396, category: "public", dimension: "overworld" },
         { name: "コズマ駅入口", x: -871, z: 383, category: "station", dimension: "overworld" },
         { name: "村人ハウス", x: -858, z: 441, category: "build", dimension: "overworld" },
-        { name: "ジモティ爆破慰霊碑", x: -958, z: 372, category: "structure", dimension: "overworld" }
+        { name: "ジモティ爆破慰霊碑", x: -958, z: 372, category: "structure", dimension: "overworld" },
+        { name: "蟲神器市防災センター", x: -759, z: 404, category: "public", dimension: "overworld" },
+        { name: "motel SDGs", x: -1217, z: 741, category: "build", dimension: "overworld" }
     ],
 
     areas: [
