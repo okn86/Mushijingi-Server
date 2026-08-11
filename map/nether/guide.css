@@ -302,6 +302,9 @@
 
 .guide-rv-bars { flex: 1; min-width: 0; }
 
+/* 棒グラフが無いときは点数を真ん中に置く */
+.guide-rv-sum.is-scoreonly { justify-content: center; }
+
 .guide-rv-bar {
     display: flex;
     align-items: center;

@@ -770,18 +770,26 @@
             var max = Math.max.apply(null, counts.concat([1]));
 
             var sum = el('div', 'guide-rv-sum');
-            var bars = el('div', 'guide-rv-bars');
-            for (var n = 5; n >= 1; n--) {
-                var row = el('div', 'guide-rv-bar');
-                row.appendChild(el('span', 'guide-rv-barn', String(n)));
-                var track = el('span', 'guide-rv-track');
-                var fill = el('span', 'guide-rv-fill');
-                fill.style.width = (counts[n - 1] / max * 100) + '%';
-                track.appendChild(fill);
-                row.appendChild(track);
-                bars.appendChild(row);
+
+            // 本文が 1 件も無いときは棒グラフを出さない。
+            // 点数と件数だけ CSV に入っている状態だと、全部ゼロの棒の横に
+            // 「7,483件のクチコミ」と出て、壊れているように見えるため。
+            if (revs.length) {
+                var bars = el('div', 'guide-rv-bars');
+                for (var n = 5; n >= 1; n--) {
+                    var row = el('div', 'guide-rv-bar');
+                    row.appendChild(el('span', 'guide-rv-barn', String(n)));
+                    var track = el('span', 'guide-rv-track');
+                    var fill = el('span', 'guide-rv-fill');
+                    fill.style.width = (counts[n - 1] / max * 100) + '%';
+                    track.appendChild(fill);
+                    row.appendChild(track);
+                    bars.appendChild(row);
+                }
+                sum.appendChild(bars);
+            } else {
+                sum.classList.add('is-scoreonly');
             }
-            sum.appendChild(bars);
 
             var big = el('div', 'guide-rv-big');
             big.innerHTML = '<b>' + sc.rating.toFixed(1) + '</b>' + starsHtml(sc.rating, 'is-lg') +
@@ -845,7 +853,8 @@
 
             // --- 一覧 ---
             if (!revs.length) {
-                pane.appendChild(el('div', 'guide-rv-empty', 'まだクチコミはありません'));
+                pane.appendChild(el('div', 'guide-rv-empty',
+                    sc.count ? 'クチコミの本文はまだ登録されていません' : 'まだクチコミはありません'));
                 return;
             }
 
