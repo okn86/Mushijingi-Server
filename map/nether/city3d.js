@@ -595,7 +595,12 @@ function bindControls() {
                 let da = a - two.a;
                 while (da >  Math.PI) da -= Math.PI * 2;
                 while (da < -Math.PI) da += Math.PI * 2;
-                yaw -= da;
+                // 足すのが正しい。引くと、指を左へひねったのに景色が右へ回る。
+                //
+                // 画面の y は下向きなので、da が正 = 指は時計回り。
+                // 一方 yaw を減らすと、真北の点は画面の左へ動く（＝景色は反時計回り）。
+                // つまり「引く」と指と景色が逆向きになる。
+                yaw += da;
                 // 0.006 だと 170px 動かしただけで真上から水平まで振り切れた。
                 // 画面の高さの半分ほど動かして端から端、くらいが手になじむ。
                 pitch = Math.max(0.10, Math.min(1.55, pitch + (my - two.my) * 0.0035));
@@ -611,7 +616,9 @@ function bindControls() {
         // 地図と同じで、ふつうに引いたら景色が動く（＝平行移動）。
         // 回すのは右ボタンか Shift、指なら二本目を足したとき。
         if (e.shiftKey || e.buttons === 2 || rotMode) {
-            yaw -= dx * 0.005;
+            // 二本指のひねりと同じ向きにそろえる。
+            // 引いた方向へ景色が回る（右へ引けば景色も右へ）。
+            yaw += dx * 0.005;
             pitch = Math.max(0.10, Math.min(1.55, pitch + dy * 0.005));
         } else {
             pan(dx, dy);
