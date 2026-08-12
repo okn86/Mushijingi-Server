@@ -808,7 +808,12 @@ function applyPending() {
 // 近いほど真上寄りに残す。
 function tiltFor(d) {
     const k = Math.min(1, Math.max(0, (d - 110) / 300));
-    return 1.12 + (0.70 - 1.12) * k;
+    let t = 1.12 + (0.70 - 1.12) * k;
+    // 縦長の画面では、同じ角度だと上半分が空だけになる。
+    // 横長の画面を基準に決めた角度なので、縦に長いぶんだけ見下ろしを強くする。
+    const a = cv ? cv.clientHeight / Math.max(1, cv.clientWidth) : 1;
+    if (a > 1.2) t = Math.min(1.42, t + Math.min(0.34, (a - 1.2) * 0.34));
+    return t;
 }
 
 // 見下ろす角度をなめらかに変える
