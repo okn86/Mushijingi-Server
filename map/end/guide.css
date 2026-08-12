@@ -971,3 +971,246 @@ body.guide-with-place .guide-panel {
     body.guide-with-place .guide-panel { max-width: none; }
 }
 
+
+/* ------------------------------------------------------------ 3D ビュー */
+
+/* 一覧ボタンの下。左上の縦並びの 3 番目。 */
+.guide-3d {
+    position: absolute;
+    top: 180px;
+    left: 8px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    font: 600 14px/1 system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
+    letter-spacing: .02em;
+    color: #f2f2f3;
+    background: rgba(24, 24, 27, .92);
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
+    cursor: pointer;
+    transition: transform .26s cubic-bezier(.22, .8, .3, 1);
+}
+.guide-3d:hover { background: rgba(40, 40, 45, .95); }
+/* 3D の範囲（蟲神器市）の外にいるときは押しても行き先が無い。
+   消すと機能があること自体が分からなくなるので、薄くして残す。 */
+.guide-3d.is-far { opacity: .45; }
+body.guide-with-place .guide-3d { transform: translateX(var(--guide-place-w)); }
+
+/* 3D 本体。地図の上に重ね、開くときだけ見せる。
+   地図を消さずに下に残しておくのは、閉じたときに同じ場所へ戻すため。 */
+.city3d {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    background: #87b8e8;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .32s ease;
+}
+.city3d.is-open { opacity: 1; visibility: visible; }
+
+.city3d-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;   /* 指の操作は自前で受ける */
+    cursor: grab;
+}
+.city3d-canvas:active { cursor: grabbing; }
+
+.city3d-hud {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    z-index: 2;
+    font: 11px/1.55 system-ui, sans-serif;
+    color: rgba(255, 255, 255, .82);
+    background: rgba(16, 16, 19, .6);
+    padding: 6px 9px;
+    border-radius: 8px;
+    backdrop-filter: blur(6px);
+    pointer-events: none;
+    white-space: pre;
+}
+/* 数字は開発用。既定では出さない。 */
+.city3d-hud { display: none; }
+.city3d.is-debug .city3d-hud { display: block; }
+
+/* 閉じるボタンと操作の説明 */
+.city3d-close {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 46px;
+    padding: 0 16px 0 12px;
+    font: 600 14px/1 system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
+    color: #f2f2f3;
+    background: rgba(24, 24, 27, .92);
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
+    cursor: pointer;
+}
+.city3d-close:hover { background: rgba(40, 40, 45, .95); }
+
+.city3d-help {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 3;
+    font: 12px/1.6 system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
+    color: rgba(255, 255, 255, .9);
+    background: rgba(16, 16, 19, .62);
+    padding: 7px 11px;
+    border-radius: 9px;
+    backdrop-filter: blur(6px);
+    pointer-events: none;
+    transition: opacity .4s ease;
+}
+.city3d-help.is-gone { opacity: 0; }
+
+@media (max-width: 640px) {
+    .guide-3d { top: 180px; }
+    .city3d-help { left: 10px; right: 10px; text-align: center; }
+}
+
+/* 3D の中の地点ピン。
+   canvas の上に HTML を重ねている。板を立てるより文字が読みやすく、
+   タップの当たり判定もそのまま使えるため。 */
+.city3d-pins {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;   /* ピン自身だけ拾う。地面のドラッグを邪魔しない */
+    overflow: hidden;
+}
+
+.city3d-pin {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    max-width: 190px;
+    /* 丸の中心をちょうど座標に置く。padding 3px + 丸 14px の半分 = 10px。 */
+    margin: -14px 0 0 -10px;
+    padding: 3px 9px 3px 3px;
+    font: 600 12px/1.25 system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
+    color: #fff;
+    background: rgba(20, 20, 24, .72);
+    border: 0;
+    border-radius: 13px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .45);
+    white-space: nowrap;
+    cursor: pointer;
+    /* 当たり判定は canvas 側で自前に取る。ここで拾うと、ピンの上から
+       ドラッグを始めたときに地面が動かせなくなる。 */
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+}
+.city3d-pin:hover { background: rgba(40, 40, 48, .92); }
+
+.city3d-pin > i {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--c, #ea4335);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, .9);
+}
+.city3d-pin > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .5);
+}
+
+/* 遠いものは点だけ。全部に名前を出すと文字で埋まる。 */
+.city3d-pin.is-dot {
+    gap: 0;
+    /* 丸が小さいぶん、中心を合わせる位置も変わる（3 + 11/2 = 8.5px） */
+    margin: -8.5px 0 0 -8.5px;
+    padding: 3px;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+}
+.city3d-pin.is-dot > span { display: none; }
+.city3d-pin.is-dot > i { width: 11px; height: 11px; box-shadow: 0 0 0 2px rgba(255,255,255,.75), 0 1px 4px rgba(0,0,0,.5); }
+
+/* 3D 表示中は、情報カードを 3D より上に出す。
+   どちらも 1200 のままだと、あとから足した 3D が常に勝ってカードが隠れる。 */
+body.guide-3d-on .guide-place { z-index: 1300; }
+
+/* ピンの表示切り替え。「地図へ戻る」の右隣。 */
+.city3d-pintoggle {
+    position: absolute;
+    top: 8px;
+    /* 右に置く。左だと情報カード（PC では左端に出る）の裏に入って押せない。 */
+    right: 8px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 46px;
+    padding: 0 15px 0 12px;
+    font: 600 14px/1 system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
+    color: rgba(242, 242, 243, .5);
+    background: rgba(24, 24, 27, .92);
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
+    cursor: pointer;
+}
+.city3d-pintoggle:hover { background: rgba(40, 40, 45, .95); }
+.city3d-pintoggle.is-on { color: #f2f2f3; }
+.city3d-pintoggle:not(.is-on) > svg { opacity: .5; }
+
+/* 選んでいる地点。2D で選んだときと同じ赤いピンにする。
+
+   並びは普通のピンのまま（丸 → 名前の横並び）で、丸の絵だけ差し替える。
+   縦並びにして中央そろえにすると、要素の幅が名前の長さで決まるため、
+   長い名前の地点で赤ピンが横にずれる。
+   雫は i の擬似要素として描き、先端が丸の中心（＝地点の座標）に来る。
+   こうすると名前が何文字でも位置が動かない。 */
+.city3d-pin.is-sel {
+    background: rgba(20, 20, 24, .82);
+}
+.city3d-pin.is-sel > i {
+    position: relative;
+    background: none;
+    box-shadow: none;
+}
+.city3d-pin.is-sel > i::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 50%;          /* 下辺＝雫の先端を丸の中心に合わせる */
+    width: 30px;
+    height: 44px;
+    transform: translateX(-50%);
+    background:
+        url('data:image/svg+xml;charset=utf-8,\
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="44" viewBox="0 0 30 44">\
+<ellipse cx="15" cy="40.6" rx="5.2" ry="2.1" fill="rgba(0,0,0,.34)"/>\
+<path d="M15 40.5S27.2 24.4 27.2 14.9A12.2 12.2 0 1 0 2.8 14.9C2.8 24.4 15 40.5 15 40.5z" \
+fill="%23ea4335" stroke="rgba(120,20,14,.55)" stroke-width="0.8"/>\
+<circle cx="15" cy="14.6" r="4.4" fill="%23b3241b"/></svg>') center/contain no-repeat;
+}
+/* 雫は丸より横に広いので、名前をそのぶん逃がす */
+.city3d-pin.is-sel > span { margin-left: 9px; }
+
+@media (max-width: 640px) {
+    /* 横幅が足りないので、切り替えは文字を落としてアイコンだけにする */
+    .city3d-pintoggle { padding: 0 13px; }
+    .city3d-pintoggle > span { display: none; }
+}

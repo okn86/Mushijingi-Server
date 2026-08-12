@@ -182,6 +182,7 @@
         buildInteractions(ctx);
         buildListPanel(ctx);
         buildBackLink();
+        build3dButton(ctx);
         if (ctx.edit) buildEditUi(ctx);
 
         // 共有リンク（#p=地点名）で開かれたときは、その地点を選んだ状態にする
@@ -1277,6 +1278,136 @@
             '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
             'stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>';
         document.body.appendChild(a);
+    }
+
+    // ---------------------------------------------------------------- 3D
+
+    /*
+     * 「3D」ボタン。押すと蟲神器市の立体表示を地図の上に重ねる。
+     *
+     * 押した瞬間のカメラを、そのとき地図が映していた場所と縮尺にそろえる。
+     * 真上から見た透視投影は 2D の地図とほぼ同じ絵になるので、そこから
+     * 傾ければ「同じ場所が起き上がる」ように見える。いきなり斜めから
+     * 出すと、どこを見ているのか分からなくなる。
+     *
+     * データ（20MB ほど）は押すまで一切読まない。地図を見るだけの人に
+     * 通信量を掛けないため、script も初回に差し込む。
+     */
+    var CITY3D_AREA = [-1536, 128, -256, 1024];   // 作ってあるタイルの範囲 [x0,z0,x1,z1]
+
+    function build3dButton(ctx) {
+        // 立体があるのはオーバーワールドの蟲神器市だけ
+        if ((ctx.dim || 'overworld') !== 'overworld') return;
+        if (!window.WebGL2RenderingContext) return;
+
+        var btn = el('button', 'guide-3d', '3D');
+        btn.title = '蟲神器市を立体で見る';
+        btn.setAttribute('aria-label', '蟲神器市を立体で見る');
+        document.body.appendChild(btn);
+
+        var view = ctx.olMap.getView();
+        var dp = ctx.map.dataProjection, vp = ctx.map.viewProjection;
+
+        // 地図の縮尺は投影の単位で入っている。ブロックに直す倍率を実測する。
+        // 定義を読んで決め打ちにすると、uNmINeD 側が変わったとき静かにずれる。
+        function blocksPerUnit() {
+            var c = view.getCenter();
+            var a = ol.proj.transform(c, vp, dp);
+            var b = ol.proj.transform([c[0] + 100, c[1]], vp, dp);
+            return Math.abs(b[0] - a[0]) / 100;
+        }
+        function worldCenter() {
+            return ol.proj.transform(view.getCenter(), vp, dp);
+        }
+        function inArea(w) {
+            return w[0] >= CITY3D_AREA[0] && w[0] <= CITY3D_AREA[2] &&
+                   w[1] >= CITY3D_AREA[1] && w[1] <= CITY3D_AREA[3];
+        }
+        // 範囲の外にいることを見た目で伝える。押せなくはしない（押せば飛ぶ）
+        function refresh() {
+            btn.classList.toggle('is-far', !inArea(worldCenter()));
+        }
+        view.on('change:center', refresh);
+        refresh();
+
+        // 戻ってきたとき、3D で見ていた場所と縮尺に地図を合わせる
+        function backToMap(r) {
+            document.body.classList.remove('guide-3d-on');
+            if (!r) return;
+            view.setCenter(ol.proj.transform([r.x, r.z], dp, vp));
+            var bpu = blocksPerUnit();
+            if (bpu > 0) view.setResolution(r.blocksPerPx / bpu);
+            refresh();
+        }
+
+        // 3D の中に立てる地点。地図と同じ絞り込み（カテゴリの表示切り替え）に従う。
+        // 立体があるのは街の中だけなので、範囲の外の地点は渡さない。
+        function pinList() {
+            return ctx.points.filter(function (p) {
+                if (ctx.isHidden(p, 'point')) return false;
+                return p.x >= CITY3D_AREA[0] && p.x <= CITY3D_AREA[2] &&
+                       p.z >= CITY3D_AREA[1] && p.z <= CITY3D_AREA[3];
+            }).map(function (p) {
+                var cat = categoryOf(p, ctx.config);
+                return { name: p.name, x: p.x, z: p.z, y: p.y, color: cat && cat.color };
+            });
+        }
+
+        // ピンを押したら、地図のときと同じ情報カードを出す。
+        // 地図をその場所へ寄せる（2D の bringIntoView）ことは、3D ではしない。
+        // 見ている向きが動くと、どこを見ていたのか分からなくなるため。
+        // 代わりに選んだピンを赤くして、どれの話か分かるようにしている。
+        function pickPin(name) {
+            var hit = null;
+            ctx.points.forEach(function (p) { if (!hit && p.name === name) hit = p; });
+            if (!hit) return;
+            ctx.openPopup(hit, 'point');
+            window.City3D.setSelected(name);
+        }
+
+        // カードを閉じたら赤ピンも戻す
+        var closePopup0 = ctx.closePopup;
+        ctx.closePopup = function () {
+            closePopup0();
+            if (window.City3D && window.City3D.isOpen()) window.City3D.setSelected(null);
+        };
+
+        function show() {
+            var w = worldCenter();
+            var here = inArea(w);
+            document.body.classList.add('guide-3d-on');
+            window.City3D.setBase('city3d/');
+            window.City3D.open(document.body, {
+                // 範囲の外から押したときは街の真ん中へ連れて行く
+                x: here ? w[0] : (CITY3D_AREA[0] + CITY3D_AREA[2]) / 2,
+                z: here ? w[1] : (CITY3D_AREA[1] + CITY3D_AREA[3]) / 2,
+                blocksPerPx: here ? view.getResolution() * blocksPerUnit() : 1.6,
+            }, backToMap);
+            window.City3D.setPins(pinList(), pickPin);
+        }
+
+        var loading = false;
+        btn.onclick = function () {
+            if (window.City3D) return show();
+            if (loading) return;
+            loading = true;
+            btn.textContent = '…';
+            var s = document.createElement('script');
+            s.src = 'city3d.js';
+            s.onload = function () { btn.textContent = '3D'; loading = false; show(); };
+            s.onerror = function () {
+                btn.textContent = '3D'; loading = false;
+                alert('3D の読み込みに失敗しました');
+            };
+            document.head.appendChild(s);
+        };
+
+        // Esc で地図へ戻す
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && window.City3D && window.City3D.isOpen()) {
+                window.City3D.close();
+            }
+        });
     }
 
     // ------------------------------------------------------------ 編集モード

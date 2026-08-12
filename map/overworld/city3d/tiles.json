@@ -1,0 +1,1530 @@
+{
+ "center": [
+  -896,
+  576
+ ],
+ "span": 1280,
+ "tile": 128,
+ "tiles": [
+  {
+   "x": -1536,
+   "z": 512,
+   "size": 128,
+   "near": {
+    "file": "t-1536_512.near.glb",
+    "tris": 95236,
+    "bytes": 3620616,
+    "gzBytes": 434645
+   },
+   "y0": 59,
+   "y1": 130,
+   "far": {
+    "file": "t-1536_512.far.glb",
+    "tris": 93418,
+    "bytes": 2991000,
+    "gzBytes": 466443
+   },
+   "vfar": {
+    "file": "t-1536_512.vfar.glb",
+    "tris": 19932,
+    "bytes": 639436,
+    "gzBytes": 96239
+   },
+   "xfar": {
+    "file": "t-1536_512.xfar.glb",
+    "tris": 3788,
+    "bytes": 122816,
+    "gzBytes": 19069
+   }
+  },
+  {
+   "x": -1536,
+   "z": 640,
+   "size": 128,
+   "near": {
+    "file": "t-1536_640.near.glb",
+    "tris": 132366,
+    "bytes": 5031560,
+    "gzBytes": 555192
+   },
+   "y0": 58,
+   "y1": 133,
+   "far": {
+    "file": "t-1536_640.far.glb",
+    "tris": 95390,
+    "bytes": 3054104,
+    "gzBytes": 470589
+   },
+   "vfar": {
+    "file": "t-1536_640.vfar.glb",
+    "tris": 17830,
+    "bytes": 572172,
+    "gzBytes": 86802
+   },
+   "xfar": {
+    "file": "t-1536_640.xfar.glb",
+    "tris": 3508,
+    "bytes": 113856,
+    "gzBytes": 17280
+   }
+  },
+  {
+   "x": -1408,
+   "z": 128,
+   "size": 128,
+   "near": {
+    "file": "t-1408_128.near.glb",
+    "tris": 12162,
+    "bytes": 463788,
+    "gzBytes": 59901
+   },
+   "y0": 58,
+   "y1": 75,
+   "far": {
+    "file": "t-1408_128.far.glb",
+    "tris": 9958,
+    "bytes": 320264,
+    "gzBytes": 53110
+   },
+   "vfar": {
+    "file": "t-1408_128.vfar.glb",
+    "tris": 2318,
+    "bytes": 75772,
+    "gzBytes": 12409
+   },
+   "xfar": {
+    "file": "t-1408_128.xfar.glb",
+    "tris": 570,
+    "bytes": 19828,
+    "gzBytes": 3555
+   }
+  },
+  {
+   "x": -1408,
+   "z": 256,
+   "size": 128,
+   "near": {
+    "file": "t-1408_256.near.glb",
+    "tris": 11850,
+    "bytes": 451932,
+    "gzBytes": 57023
+   },
+   "y0": 58,
+   "y1": 73,
+   "far": {
+    "file": "t-1408_256.far.glb",
+    "tris": 11828,
+    "bytes": 380104,
+    "gzBytes": 58848
+   },
+   "vfar": {
+    "file": "t-1408_256.vfar.glb",
+    "tris": 2334,
+    "bytes": 76284,
+    "gzBytes": 12034
+   },
+   "xfar": {
+    "file": "t-1408_256.xfar.glb",
+    "tris": 622,
+    "bytes": 21492,
+    "gzBytes": 3567
+   }
+  },
+  {
+   "x": -1408,
+   "z": 384,
+   "size": 128,
+   "near": {
+    "file": "t-1408_384.near.glb",
+    "tris": 96346,
+    "bytes": 3662800,
+    "gzBytes": 355435
+   },
+   "y0": 58,
+   "y1": 87,
+   "far": {
+    "file": "t-1408_384.far.glb",
+    "tris": 31566,
+    "bytes": 1011732,
+    "gzBytes": 160939
+   },
+   "vfar": {
+    "file": "t-1408_384.vfar.glb",
+    "tris": 8482,
+    "bytes": 273032,
+    "gzBytes": 42585
+   },
+   "xfar": {
+    "file": "t-1408_384.xfar.glb",
+    "tris": 1738,
+    "bytes": 57212,
+    "gzBytes": 9396
+   }
+  },
+  {
+   "x": -1408,
+   "z": 512,
+   "size": 128,
+   "near": {
+    "file": "t-1408_512.near.glb",
+    "tris": 54506,
+    "bytes": 2072876,
+    "gzBytes": 201634
+   },
+   "y0": 58,
+   "y1": 87,
+   "far": {
+    "file": "t-1408_512.far.glb",
+    "tris": 21838,
+    "bytes": 700432,
+    "gzBytes": 110368
+   },
+   "vfar": {
+    "file": "t-1408_512.vfar.glb",
+    "tris": 5562,
+    "bytes": 179592,
+    "gzBytes": 27326
+   },
+   "xfar": {
+    "file": "t-1408_512.xfar.glb",
+    "tris": 1340,
+    "bytes": 44472,
+    "gzBytes": 7269
+   }
+  },
+  {
+   "x": -1408,
+   "z": 640,
+   "size": 128,
+   "near": {
+    "file": "t-1408_640.near.glb",
+    "tris": 46544,
+    "bytes": 1770312,
+    "gzBytes": 196562
+   },
+   "y0": 58,
+   "y1": 123,
+   "far": {
+    "file": "t-1408_640.far.glb",
+    "tris": 33680,
+    "bytes": 1079376,
+    "gzBytes": 171498
+   },
+   "vfar": {
+    "file": "t-1408_640.vfar.glb",
+    "tris": 7360,
+    "bytes": 237128,
+    "gzBytes": 37210
+   },
+   "xfar": {
+    "file": "t-1408_640.xfar.glb",
+    "tris": 1602,
+    "bytes": 52860,
+    "gzBytes": 8351
+   }
+  },
+  {
+   "x": -1280,
+   "z": 128,
+   "size": 128,
+   "near": {
+    "file": "t-1280_128.near.glb",
+    "tris": 15560,
+    "bytes": 592912,
+    "gzBytes": 71482
+   },
+   "y0": 58,
+   "y1": 74,
+   "far": {
+    "file": "t-1280_128.far.glb",
+    "tris": 11782,
+    "bytes": 378632,
+    "gzBytes": 60414
+   },
+   "vfar": {
+    "file": "t-1280_128.vfar.glb",
+    "tris": 2768,
+    "bytes": 90172,
+    "gzBytes": 14257
+   },
+   "xfar": {
+    "file": "t-1280_128.xfar.glb",
+    "tris": 692,
+    "bytes": 23732,
+    "gzBytes": 3946
+   }
+  },
+  {
+   "x": -1280,
+   "z": 256,
+   "size": 128,
+   "near": {
+    "file": "t-1280_256.near.glb",
+    "tris": 24220,
+    "bytes": 921996,
+    "gzBytes": 95821
+   },
+   "y0": 58,
+   "y1": 82,
+   "far": {
+    "file": "t-1280_256.far.glb",
+    "tris": 9736,
+    "bytes": 313160,
+    "gzBytes": 48965
+   },
+   "vfar": {
+    "file": "t-1280_256.vfar.glb",
+    "tris": 2608,
+    "bytes": 85056,
+    "gzBytes": 13528
+   },
+   "xfar": {
+    "file": "t-1280_256.xfar.glb",
+    "tris": 714,
+    "bytes": 24436,
+    "gzBytes": 4131
+   }
+  },
+  {
+   "x": -1280,
+   "z": 384,
+   "size": 128,
+   "near": {
+    "file": "t-1280_384.near.glb",
+    "tris": 134898,
+    "bytes": 5127776,
+    "gzBytes": 464971
+   },
+   "y0": 59,
+   "y1": 86,
+   "far": {
+    "file": "t-1280_384.far.glb",
+    "tris": 26460,
+    "bytes": 848336,
+    "gzBytes": 134217
+   },
+   "vfar": {
+    "file": "t-1280_384.vfar.glb",
+    "tris": 8314,
+    "bytes": 267656,
+    "gzBytes": 41432
+   },
+   "xfar": {
+    "file": "t-1280_384.xfar.glb",
+    "tris": 1716,
+    "bytes": 56508,
+    "gzBytes": 9073
+   }
+  },
+  {
+   "x": -1280,
+   "z": 512,
+   "size": 128,
+   "near": {
+    "file": "t-1280_512.near.glb",
+    "tris": 104968,
+    "bytes": 3990436,
+    "gzBytes": 383401
+   },
+   "y0": 59,
+   "y1": 126,
+   "far": {
+    "file": "t-1280_512.far.glb",
+    "tris": 35032,
+    "bytes": 1122644,
+    "gzBytes": 173360
+   },
+   "vfar": {
+    "file": "t-1280_512.vfar.glb",
+    "tris": 9528,
+    "bytes": 306504,
+    "gzBytes": 46306
+   },
+   "xfar": {
+    "file": "t-1280_512.xfar.glb",
+    "tris": 1992,
+    "bytes": 65340,
+    "gzBytes": 10352
+   }
+  },
+  {
+   "x": -1280,
+   "z": 640,
+   "size": 128,
+   "near": {
+    "file": "t-1280_640.near.glb",
+    "tris": 73232,
+    "bytes": 2784464,
+    "gzBytes": 298193
+   },
+   "y0": 59,
+   "y1": 126,
+   "far": {
+    "file": "t-1280_640.far.glb",
+    "tris": 54446,
+    "bytes": 1743896,
+    "gzBytes": 271838
+   },
+   "vfar": {
+    "file": "t-1280_640.vfar.glb",
+    "tris": 9910,
+    "bytes": 318728,
+    "gzBytes": 49254
+   },
+   "xfar": {
+    "file": "t-1280_640.xfar.glb",
+    "tris": 2392,
+    "bytes": 78144,
+    "gzBytes": 12327
+   }
+  },
+  {
+   "x": -1280,
+   "z": 768,
+   "size": 128,
+   "near": {
+    "file": "t-1280_768.near.glb",
+    "tris": 131236,
+    "bytes": 4988620,
+    "gzBytes": 573821
+   },
+   "y0": 59,
+   "y1": 141,
+   "far": {
+    "file": "t-1280_768.far.glb",
+    "tris": 125592,
+    "bytes": 4020572,
+    "gzBytes": 620548
+   },
+   "vfar": {
+    "file": "t-1280_768.vfar.glb",
+    "tris": 25670,
+    "bytes": 823056,
+    "gzBytes": 123887
+   },
+   "xfar": {
+    "file": "t-1280_768.xfar.glb",
+    "tris": 4892,
+    "bytes": 158144,
+    "gzBytes": 22869
+   }
+  },
+  {
+   "x": -1152,
+   "z": 256,
+   "size": 128,
+   "near": {
+    "file": "t-1152_256.near.glb",
+    "tris": 95320,
+    "bytes": 3623812,
+    "gzBytes": 325732
+   },
+   "y0": 58,
+   "y1": 98,
+   "far": {
+    "file": "t-1152_256.far.glb",
+    "tris": 23848,
+    "bytes": 764752,
+    "gzBytes": 123813
+   },
+   "vfar": {
+    "file": "t-1152_256.vfar.glb",
+    "tris": 7040,
+    "bytes": 226888,
+    "gzBytes": 35744
+   },
+   "xfar": {
+    "file": "t-1152_256.xfar.glb",
+    "tris": 1478,
+    "bytes": 48892,
+    "gzBytes": 7994
+   }
+  },
+  {
+   "x": -1152,
+   "z": 384,
+   "size": 128,
+   "near": {
+    "file": "t-1152_384.near.glb",
+    "tris": 297064,
+    "bytes": 11290088,
+    "gzBytes": 965044
+   },
+   "y0": 59,
+   "y1": 98,
+   "far": {
+    "file": "t-1152_384.far.glb",
+    "tris": 55494,
+    "bytes": 1777436,
+    "gzBytes": 277404
+   },
+   "vfar": {
+    "file": "t-1152_384.vfar.glb",
+    "tris": 16976,
+    "bytes": 544848,
+    "gzBytes": 80672
+   },
+   "xfar": {
+    "file": "t-1152_384.xfar.glb",
+    "tris": 2840,
+    "bytes": 92480,
+    "gzBytes": 14589
+   }
+  },
+  {
+   "x": -1152,
+   "z": 512,
+   "size": 128,
+   "near": {
+    "file": "t-1152_512.near.glb",
+    "tris": 195366,
+    "bytes": 7425564,
+    "gzBytes": 673312
+   },
+   "y0": 58,
+   "y1": 126,
+   "far": {
+    "file": "t-1152_512.far.glb",
+    "tris": 47992,
+    "bytes": 1537364,
+    "gzBytes": 237019
+   },
+   "vfar": {
+    "file": "t-1152_512.vfar.glb",
+    "tris": 13806,
+    "bytes": 443404,
+    "gzBytes": 65337
+   },
+   "xfar": {
+    "file": "t-1152_512.xfar.glb",
+    "tris": 2894,
+    "bytes": 94208,
+    "gzBytes": 14534
+   }
+  },
+  {
+   "x": -1152,
+   "z": 640,
+   "size": 128,
+   "near": {
+    "file": "t-1152_640.near.glb",
+    "tris": 48054,
+    "bytes": 1827696,
+    "gzBytes": 210008
+   },
+   "y0": 58,
+   "y1": 126,
+   "far": {
+    "file": "t-1152_640.far.glb",
+    "tris": 41558,
+    "bytes": 1331476,
+    "gzBytes": 202182
+   },
+   "vfar": {
+    "file": "t-1152_640.vfar.glb",
+    "tris": 8384,
+    "bytes": 269896,
+    "gzBytes": 41126
+   },
+   "xfar": {
+    "file": "t-1152_640.xfar.glb",
+    "tris": 2066,
+    "bytes": 67712,
+    "gzBytes": 10383
+   }
+  },
+  {
+   "x": -1152,
+   "z": 768,
+   "size": 128,
+   "near": {
+    "file": "t-1152_768.near.glb",
+    "tris": 96390,
+    "bytes": 3664472,
+    "gzBytes": 414874
+   },
+   "y0": 59,
+   "y1": 132,
+   "far": {
+    "file": "t-1152_768.far.glb",
+    "tris": 91412,
+    "bytes": 2926812,
+    "gzBytes": 441554
+   },
+   "vfar": {
+    "file": "t-1152_768.vfar.glb",
+    "tris": 18016,
+    "bytes": 578128,
+    "gzBytes": 86498
+   },
+   "xfar": {
+    "file": "t-1152_768.xfar.glb",
+    "tris": 3662,
+    "bytes": 118788,
+    "gzBytes": 17727
+   }
+  },
+  {
+   "x": -1024,
+   "z": 256,
+   "size": 128,
+   "near": {
+    "file": "t-1024_256.near.glb",
+    "tris": 253128,
+    "bytes": 9620520,
+    "gzBytes": 846732
+   },
+   "y0": 58,
+   "y1": 204,
+   "far": {
+    "file": "t-1024_256.far.glb",
+    "tris": 70966,
+    "bytes": 2272540,
+    "gzBytes": 342230
+   },
+   "vfar": {
+    "file": "t-1024_256.vfar.glb",
+    "tris": 20800,
+    "bytes": 667216,
+    "gzBytes": 99291
+   },
+   "xfar": {
+    "file": "t-1024_256.xfar.glb",
+    "tris": 5012,
+    "bytes": 161992,
+    "gzBytes": 23442
+   }
+  },
+  {
+   "x": -1024,
+   "z": 384,
+   "size": 128,
+   "near": {
+    "file": "t-1024_384.near.glb",
+    "tris": 519842,
+    "bytes": 19755660,
+    "gzBytes": 1720374
+   },
+   "y0": 58,
+   "y1": 173,
+   "far": {
+    "file": "t-1024_384.far.glb",
+    "tris": 115472,
+    "bytes": 3696732,
+    "gzBytes": 569220
+   },
+   "vfar": {
+    "file": "t-1024_384.vfar.glb",
+    "tris": 33510,
+    "bytes": 1073940,
+    "gzBytes": 158816
+   },
+   "xfar": {
+    "file": "t-1024_384.xfar.glb",
+    "tris": 5478,
+    "bytes": 176904,
+    "gzBytes": 26232
+   }
+  },
+  {
+   "x": -1024,
+   "z": 512,
+   "size": 128,
+   "near": {
+    "file": "t-1024_512.near.glb",
+    "tris": 168480,
+    "bytes": 6403896,
+    "gzBytes": 510544
+   },
+   "y0": 58,
+   "y1": 173,
+   "far": {
+    "file": "t-1024_512.far.glb",
+    "tris": 27672,
+    "bytes": 887124,
+    "gzBytes": 134359
+   },
+   "vfar": {
+    "file": "t-1024_512.vfar.glb",
+    "tris": 7878,
+    "bytes": 253704,
+    "gzBytes": 37603
+   },
+   "xfar": {
+    "file": "t-1024_512.xfar.glb",
+    "tris": 1616,
+    "bytes": 53308,
+    "gzBytes": 8522
+   }
+  },
+  {
+   "x": -1024,
+   "z": 640,
+   "size": 128,
+   "near": {
+    "file": "t-1024_640.near.glb",
+    "tris": 18532,
+    "bytes": 705848,
+    "gzBytes": 76634
+   },
+   "y0": 58,
+   "y1": 76,
+   "far": {
+    "file": "t-1024_640.far.glb",
+    "tris": 11198,
+    "bytes": 359944,
+    "gzBytes": 55160
+   },
+   "vfar": {
+    "file": "t-1024_640.vfar.glb",
+    "tris": 2548,
+    "bytes": 83132,
+    "gzBytes": 12965
+   },
+   "xfar": {
+    "file": "t-1024_640.xfar.glb",
+    "tris": 582,
+    "bytes": 20212,
+    "gzBytes": 3323
+   }
+  },
+  {
+   "x": -1024,
+   "z": 768,
+   "size": 128,
+   "near": {
+    "file": "t-1024_768.near.glb",
+    "tris": 56350,
+    "bytes": 2142948,
+    "gzBytes": 250206
+   },
+   "y0": 58,
+   "y1": 131,
+   "far": {
+    "file": "t-1024_768.far.glb",
+    "tris": 55078,
+    "bytes": 1764120,
+    "gzBytes": 268040
+   },
+   "vfar": {
+    "file": "t-1024_768.vfar.glb",
+    "tris": 11164,
+    "bytes": 358856,
+    "gzBytes": 55623
+   },
+   "xfar": {
+    "file": "t-1024_768.xfar.glb",
+    "tris": 2290,
+    "bytes": 74876,
+    "gzBytes": 11497
+   }
+  },
+  {
+   "x": -1024,
+   "z": 896,
+   "size": 128,
+   "near": {
+    "file": "t-1024_896.near.glb",
+    "tris": 128384,
+    "bytes": 4880244,
+    "gzBytes": 574090
+   },
+   "y0": 58,
+   "y1": 131,
+   "far": {
+    "file": "t-1024_896.far.glb",
+    "tris": 126232,
+    "bytes": 4041052,
+    "gzBytes": 619861
+   },
+   "vfar": {
+    "file": "t-1024_896.vfar.glb",
+    "tris": 24466,
+    "bytes": 784528,
+    "gzBytes": 118173
+   },
+   "xfar": {
+    "file": "t-1024_896.xfar.glb",
+    "tris": 4466,
+    "bytes": 144512,
+    "gzBytes": 21637
+   }
+  },
+  {
+   "x": -896,
+   "z": 128,
+   "size": 128,
+   "near": {
+    "file": "t-896_128.near.glb",
+    "tris": 18982,
+    "bytes": 722948,
+    "gzBytes": 78246
+   },
+   "y0": 58,
+   "y1": 126,
+   "far": {
+    "file": "t-896_128.far.glb",
+    "tris": 9008,
+    "bytes": 289864,
+    "gzBytes": 46698
+   },
+   "vfar": {
+    "file": "t-896_128.vfar.glb",
+    "tris": 1946,
+    "bytes": 63868,
+    "gzBytes": 10478
+   },
+   "xfar": {
+    "file": "t-896_128.xfar.glb",
+    "tris": 654,
+    "bytes": 22516,
+    "gzBytes": 3928
+   }
+  },
+  {
+   "x": -896,
+   "z": 256,
+   "size": 128,
+   "near": {
+    "file": "t-896_256.near.glb",
+    "tris": 149344,
+    "bytes": 5676724,
+    "gzBytes": 540963
+   },
+   "y0": 58,
+   "y1": 161,
+   "far": {
+    "file": "t-896_256.far.glb",
+    "tris": 53392,
+    "bytes": 1710168,
+    "gzBytes": 268942
+   },
+   "vfar": {
+    "file": "t-896_256.vfar.glb",
+    "tris": 14474,
+    "bytes": 464776,
+    "gzBytes": 73123
+   },
+   "xfar": {
+    "file": "t-896_256.xfar.glb",
+    "tris": 3102,
+    "bytes": 100860,
+    "gzBytes": 16380
+   }
+  },
+  {
+   "x": -896,
+   "z": 384,
+   "size": 128,
+   "near": {
+    "file": "t-896_384.near.glb",
+    "tris": 184604,
+    "bytes": 7016604,
+    "gzBytes": 644195
+   },
+   "y0": 59,
+   "y1": 136,
+   "far": {
+    "file": "t-896_384.far.glb",
+    "tris": 50878,
+    "bytes": 1629720,
+    "gzBytes": 248248
+   },
+   "vfar": {
+    "file": "t-896_384.vfar.glb",
+    "tris": 14220,
+    "bytes": 456648,
+    "gzBytes": 68609
+   },
+   "xfar": {
+    "file": "t-896_384.xfar.glb",
+    "tris": 2720,
+    "bytes": 88636,
+    "gzBytes": 13949
+   }
+  },
+  {
+   "x": -896,
+   "z": 512,
+   "size": 128,
+   "near": {
+    "file": "t-896_512.near.glb",
+    "tris": 29644,
+    "bytes": 1128108,
+    "gzBytes": 104011
+   },
+   "y0": 58,
+   "y1": 77,
+   "far": {
+    "file": "t-896_512.far.glb",
+    "tris": 3366,
+    "bytes": 109312,
+    "gzBytes": 18245
+   },
+   "vfar": {
+    "file": "t-896_512.vfar.glb",
+    "tris": 1000,
+    "bytes": 33588,
+    "gzBytes": 5632
+   },
+   "xfar": {
+    "file": "t-896_512.xfar.glb",
+    "tris": 342,
+    "bytes": 12524,
+    "gzBytes": 2442
+   }
+  },
+  {
+   "x": -896,
+   "z": 640,
+   "size": 128,
+   "near": {
+    "file": "t-896_640.near.glb",
+    "tris": 4070,
+    "bytes": 156280,
+    "gzBytes": 19507
+   },
+   "y0": 58,
+   "y1": 76,
+   "far": {
+    "file": "t-896_640.far.glb",
+    "tris": 3038,
+    "bytes": 98812,
+    "gzBytes": 15489
+   },
+   "vfar": {
+    "file": "t-896_640.vfar.glb",
+    "tris": 716,
+    "bytes": 24500,
+    "gzBytes": 4309
+   },
+   "xfar": {
+    "file": "t-896_640.xfar.glb",
+    "tris": 184,
+    "bytes": 7464,
+    "gzBytes": 1621
+   }
+  },
+  {
+   "x": -896,
+   "z": 768,
+   "size": 128,
+   "near": {
+    "file": "t-896_768.near.glb",
+    "tris": 12874,
+    "bytes": 490844,
+    "gzBytes": 62951
+   },
+   "y0": 58,
+   "y1": 78,
+   "far": {
+    "file": "t-896_768.far.glb",
+    "tris": 12658,
+    "bytes": 406664,
+    "gzBytes": 62859
+   },
+   "vfar": {
+    "file": "t-896_768.vfar.glb",
+    "tris": 2970,
+    "bytes": 96636,
+    "gzBytes": 15446
+   },
+   "xfar": {
+    "file": "t-896_768.xfar.glb",
+    "tris": 634,
+    "bytes": 21876,
+    "gzBytes": 3850
+   }
+  },
+  {
+   "x": -896,
+   "z": 896,
+   "size": 128,
+   "near": {
+    "file": "t-896_896.near.glb",
+    "tris": 17642,
+    "bytes": 672028,
+    "gzBytes": 87233
+   },
+   "y0": 58,
+   "y1": 78,
+   "far": {
+    "file": "t-896_896.far.glb",
+    "tris": 16282,
+    "bytes": 522632,
+    "gzBytes": 84061
+   },
+   "vfar": {
+    "file": "t-896_896.vfar.glb",
+    "tris": 3926,
+    "bytes": 127232,
+    "gzBytes": 20517
+   },
+   "xfar": {
+    "file": "t-896_896.xfar.glb",
+    "tris": 968,
+    "bytes": 32564,
+    "gzBytes": 5578
+   }
+  },
+  {
+   "x": -768,
+   "z": 128,
+   "size": 128,
+   "near": {
+    "file": "t-768_128.near.glb",
+    "tris": 40912,
+    "bytes": 1556296,
+    "gzBytes": 142104
+   },
+   "y0": 58,
+   "y1": 80,
+   "far": {
+    "file": "t-768_128.far.glb",
+    "tris": 9552,
+    "bytes": 307272,
+    "gzBytes": 48516
+   },
+   "vfar": {
+    "file": "t-768_128.vfar.glb",
+    "tris": 2752,
+    "bytes": 89660,
+    "gzBytes": 14163
+   },
+   "xfar": {
+    "file": "t-768_128.xfar.glb",
+    "tris": 680,
+    "bytes": 23348,
+    "gzBytes": 3919
+   }
+  },
+  {
+   "x": -768,
+   "z": 256,
+   "size": 128,
+   "near": {
+    "file": "t-768_256.near.glb",
+    "tris": 63304,
+    "bytes": 2407196,
+    "gzBytes": 201351
+   },
+   "y0": 57,
+   "y1": 84,
+   "far": {
+    "file": "t-768_256.far.glb",
+    "tris": 10210,
+    "bytes": 328328,
+    "gzBytes": 53814
+   },
+   "vfar": {
+    "file": "t-768_256.vfar.glb",
+    "tris": 3120,
+    "bytes": 101436,
+    "gzBytes": 16360
+   },
+   "xfar": {
+    "file": "t-768_256.xfar.glb",
+    "tris": 720,
+    "bytes": 24628,
+    "gzBytes": 4268
+   }
+  },
+  {
+   "x": -768,
+   "z": 384,
+   "size": 128,
+   "near": {
+    "file": "t-768_384.near.glb",
+    "tris": 41018,
+    "bytes": 1560324,
+    "gzBytes": 146189
+   },
+   "y0": 57,
+   "y1": 84,
+   "far": {
+    "file": "t-768_384.far.glb",
+    "tris": 11014,
+    "bytes": 354056,
+    "gzBytes": 58182
+   },
+   "vfar": {
+    "file": "t-768_384.vfar.glb",
+    "tris": 3724,
+    "bytes": 120768,
+    "gzBytes": 19546
+   },
+   "xfar": {
+    "file": "t-768_384.xfar.glb",
+    "tris": 692,
+    "bytes": 23732,
+    "gzBytes": 4243
+   }
+  },
+  {
+   "x": -768,
+   "z": 512,
+   "size": 128,
+   "near": {
+    "file": "t-768_512.near.glb",
+    "tris": 20448,
+    "bytes": 778656,
+    "gzBytes": 86927
+   },
+   "y0": 58,
+   "y1": 72,
+   "far": {
+    "file": "t-768_512.far.glb",
+    "tris": 12098,
+    "bytes": 388740,
+    "gzBytes": 60338
+   },
+   "vfar": {
+    "file": "t-768_512.vfar.glb",
+    "tris": 3232,
+    "bytes": 105020,
+    "gzBytes": 16281
+   },
+   "xfar": {
+    "file": "t-768_512.xfar.glb",
+    "tris": 872,
+    "bytes": 29492,
+    "gzBytes": 4863
+   }
+  },
+  {
+   "x": -768,
+   "z": 640,
+   "size": 128,
+   "near": {
+    "file": "t-768_640.near.glb",
+    "tris": 134,
+    "bytes": 6692,
+    "gzBytes": 1508
+   },
+   "y0": 58,
+   "y1": 66,
+   "far": {
+    "file": "t-768_640.far.glb",
+    "tris": 134,
+    "bytes": 5864,
+    "gzBytes": 1485
+   },
+   "vfar": {
+    "file": "t-768_640.vfar.glb",
+    "tris": 2,
+    "bytes": 1608,
+    "gzBytes": 664
+   },
+   "xfar": {
+    "file": "t-768_640.xfar.glb",
+    "tris": 2,
+    "bytes": 1608,
+    "gzBytes": 665
+   }
+  },
+  {
+   "x": -640,
+   "z": 128,
+   "size": 128,
+   "near": {
+    "file": "t-640_128.near.glb",
+    "tris": 8832,
+    "bytes": 337244,
+    "gzBytes": 33099
+   },
+   "y0": 58,
+   "y1": 65,
+   "far": {
+    "file": "t-640_128.far.glb",
+    "tris": 1558,
+    "bytes": 51448,
+    "gzBytes": 8908
+   },
+   "vfar": {
+    "file": "t-640_128.vfar.glb",
+    "tris": 504,
+    "bytes": 17716,
+    "gzBytes": 3243
+   },
+   "xfar": {
+    "file": "t-640_128.xfar.glb",
+    "tris": 6,
+    "bytes": 1744,
+    "gzBytes": 707
+   }
+  },
+  {
+   "x": -640,
+   "z": 256,
+   "size": 128,
+   "near": {
+    "file": "t-640_256.near.glb",
+    "tris": 21602,
+    "bytes": 822508,
+    "gzBytes": 80291
+   },
+   "y0": 58,
+   "y1": 67,
+   "far": {
+    "file": "t-640_256.far.glb",
+    "tris": 6480,
+    "bytes": 208964,
+    "gzBytes": 33212
+   },
+   "vfar": {
+    "file": "t-640_256.vfar.glb",
+    "tris": 1790,
+    "bytes": 58872,
+    "gzBytes": 9382
+   },
+   "xfar": {
+    "file": "t-640_256.xfar.glb",
+    "tris": 444,
+    "bytes": 15788,
+    "gzBytes": 2853
+   }
+  },
+  {
+   "x": -640,
+   "z": 384,
+   "size": 128,
+   "near": {
+    "file": "t-640_384.near.glb",
+    "tris": 15314,
+    "bytes": 583564,
+    "gzBytes": 74309
+   },
+   "y0": 58,
+   "y1": 73,
+   "far": {
+    "file": "t-640_384.far.glb",
+    "tris": 14428,
+    "bytes": 463304,
+    "gzBytes": 75506
+   },
+   "vfar": {
+    "file": "t-640_384.vfar.glb",
+    "tris": 3332,
+    "bytes": 108220,
+    "gzBytes": 17097
+   },
+   "xfar": {
+    "file": "t-640_384.xfar.glb",
+    "tris": 758,
+    "bytes": 25844,
+    "gzBytes": 4311
+   }
+  },
+  {
+   "x": -640,
+   "z": 512,
+   "size": 128,
+   "near": {
+    "file": "t-640_512.near.glb",
+    "tris": 12268,
+    "bytes": 467812,
+    "gzBytes": 61265
+   },
+   "y0": 58,
+   "y1": 75,
+   "far": {
+    "file": "t-640_512.far.glb",
+    "tris": 11820,
+    "bytes": 379844,
+    "gzBytes": 60458
+   },
+   "vfar": {
+    "file": "t-640_512.vfar.glb",
+    "tris": 2718,
+    "bytes": 88572,
+    "gzBytes": 14346
+   },
+   "xfar": {
+    "file": "t-640_512.xfar.glb",
+    "tris": 678,
+    "bytes": 23284,
+    "gzBytes": 4072
+   }
+  },
+  {
+   "x": -640,
+   "z": 640,
+   "size": 128,
+   "near": {
+    "file": "t-640_640.near.glb",
+    "tris": 448,
+    "bytes": 18628,
+    "gzBytes": 3134
+   },
+   "y0": 58,
+   "y1": 62,
+   "far": {
+    "file": "t-640_640.far.glb",
+    "tris": 448,
+    "bytes": 15916,
+    "gzBytes": 3153
+   },
+   "vfar": {
+    "file": "t-640_640.vfar.glb",
+    "tris": 44,
+    "bytes": 2976,
+    "gzBytes": 925
+   },
+   "xfar": {
+    "file": "t-640_640.xfar.glb",
+    "tris": 44,
+    "bytes": 2972,
+    "gzBytes": 932
+   }
+  },
+  {
+   "x": -512,
+   "z": 128,
+   "size": 128,
+   "near": {
+    "file": "t-512_128.near.glb",
+    "tris": 1600,
+    "bytes": 62416,
+    "gzBytes": 7545
+   },
+   "y0": 58,
+   "y1": 65,
+   "far": {
+    "file": "t-512_128.far.glb",
+    "tris": 430,
+    "bytes": 15340,
+    "gzBytes": 3083
+   },
+   "vfar": {
+    "file": "t-512_128.vfar.glb",
+    "tris": 108,
+    "bytes": 5028,
+    "gzBytes": 1331
+   },
+   "xfar": {
+    "file": "t-512_128.xfar.glb",
+    "tris": 12,
+    "bytes": 1940,
+    "gzBytes": 758
+   }
+  },
+  {
+   "x": -512,
+   "z": 256,
+   "size": 128,
+   "near": {
+    "file": "t-512_256.near.glb",
+    "tris": 9196,
+    "bytes": 351076,
+    "gzBytes": 46031
+   },
+   "y0": 58,
+   "y1": 71,
+   "far": {
+    "file": "t-512_256.far.glb",
+    "tris": 8254,
+    "bytes": 265732,
+    "gzBytes": 42849
+   },
+   "vfar": {
+    "file": "t-512_256.vfar.glb",
+    "tris": 2022,
+    "bytes": 66296,
+    "gzBytes": 10571
+   },
+   "xfar": {
+    "file": "t-512_256.xfar.glb",
+    "tris": 472,
+    "bytes": 16684,
+    "gzBytes": 3012
+   }
+  },
+  {
+   "x": -512,
+   "z": 384,
+   "size": 128,
+   "near": {
+    "file": "t-512_384.near.glb",
+    "tris": 14404,
+    "bytes": 548984,
+    "gzBytes": 71174
+   },
+   "y0": 58,
+   "y1": 73,
+   "far": {
+    "file": "t-512_384.far.glb",
+    "tris": 13860,
+    "bytes": 445128,
+    "gzBytes": 74035
+   },
+   "vfar": {
+    "file": "t-512_384.vfar.glb",
+    "tris": 3250,
+    "bytes": 105596,
+    "gzBytes": 16786
+   },
+   "xfar": {
+    "file": "t-512_384.xfar.glb",
+    "tris": 748,
+    "bytes": 25524,
+    "gzBytes": 4360
+   }
+  },
+  {
+   "x": -512,
+   "z": 512,
+   "size": 128,
+   "near": {
+    "file": "t-512_512.near.glb",
+    "tris": 6412,
+    "bytes": 245284,
+    "gzBytes": 34003
+   },
+   "y0": 58,
+   "y1": 73,
+   "far": {
+    "file": "t-512_512.far.glb",
+    "tris": 6220,
+    "bytes": 200644,
+    "gzBytes": 32783
+   },
+   "vfar": {
+    "file": "t-512_512.vfar.glb",
+    "tris": 1676,
+    "bytes": 55224,
+    "gzBytes": 9329
+   },
+   "xfar": {
+    "file": "t-512_512.xfar.glb",
+    "tris": 428,
+    "bytes": 15276,
+    "gzBytes": 2960
+   }
+  },
+  {
+   "x": -384,
+   "z": 128,
+   "size": 128,
+   "near": {
+    "file": "t-384_128.near.glb",
+    "tris": 402,
+    "bytes": 16880,
+    "gzBytes": 2925
+   },
+   "y0": 58,
+   "y1": 64,
+   "far": {
+    "file": "t-384_128.far.glb",
+    "tris": 402,
+    "bytes": 14444,
+    "gzBytes": 2921
+   },
+   "vfar": {
+    "file": "t-384_128.vfar.glb",
+    "tris": 82,
+    "bytes": 4196,
+    "gzBytes": 1175
+   },
+   "xfar": {
+    "file": "t-384_128.xfar.glb",
+    "tris": 34,
+    "bytes": 2652,
+    "gzBytes": 867
+   }
+  },
+  {
+   "x": -384,
+   "z": 256,
+   "size": 128,
+   "near": {
+    "file": "t-384_256.near.glb",
+    "tris": 7888,
+    "bytes": 301372,
+    "gzBytes": 39191
+   },
+   "y0": 58,
+   "y1": 72,
+   "far": {
+    "file": "t-384_256.far.glb",
+    "tris": 7824,
+    "bytes": 251972,
+    "gzBytes": 39730
+   },
+   "vfar": {
+    "file": "t-384_256.vfar.glb",
+    "tris": 1934,
+    "bytes": 63480,
+    "gzBytes": 10074
+   },
+   "xfar": {
+    "file": "t-384_256.xfar.glb",
+    "tris": 410,
+    "bytes": 14700,
+    "gzBytes": 2747
+   }
+  },
+  {
+   "x": -384,
+   "z": 384,
+   "size": 128,
+   "near": {
+    "file": "t-384_384.near.glb",
+    "tris": 9794,
+    "bytes": 373804,
+    "gzBytes": 44331
+   },
+   "y0": 58,
+   "y1": 79,
+   "far": {
+    "file": "t-384_384.far.glb",
+    "tris": 6344,
+    "bytes": 204612,
+    "gzBytes": 32688
+   },
+   "vfar": {
+    "file": "t-384_384.vfar.glb",
+    "tris": 1818,
+    "bytes": 59772,
+    "gzBytes": 9838
+   },
+   "xfar": {
+    "file": "t-384_384.xfar.glb",
+    "tris": 500,
+    "bytes": 17588,
+    "gzBytes": 3356
+   }
+  },
+  {
+   "x": -384,
+   "z": 512,
+   "size": 128,
+   "near": {
+    "file": "t-384_512.near.glb",
+    "tris": 778,
+    "bytes": 31176,
+    "gzBytes": 5053
+   },
+   "y0": 58,
+   "y1": 66,
+   "far": {
+    "file": "t-384_512.far.glb",
+    "tris": 778,
+    "bytes": 26484,
+    "gzBytes": 4827
+   },
+   "vfar": {
+    "file": "t-384_512.vfar.glb",
+    "tris": 224,
+    "bytes": 8744,
+    "gzBytes": 1960
+   },
+   "xfar": {
+    "file": "t-384_512.xfar.glb",
+    "tris": 120,
+    "bytes": 5412,
+    "gzBytes": 1388
+   }
+  }
+ ],
+ "gz": true
+}
