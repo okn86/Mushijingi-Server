@@ -1080,6 +1080,12 @@ body.guide-with-place .guide-3d { transform: translateX(var(--guide-place-w)); }
 
 @media (max-width: 640px) {
     .guide-3d { top: 180px; }
+
+    /* スマホではカードが下から出るので、横へ逃がす必要がない。
+       上の方にある同種の規則ではなくここに書くのは、PC 用の
+       translateX が .guide-3d の定義の直後にあり、
+       強さが同じなら後に書いたほうが勝つため。 */
+    body.guide-with-place .guide-3d { transform: none; }
     .city3d-help { left: 10px; right: 10px; text-align: center; }
 }
 
