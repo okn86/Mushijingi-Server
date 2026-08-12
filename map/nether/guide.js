@@ -138,7 +138,10 @@
             draftPoints: drafts.points || [],
             draftAreas:  drafts.areas  || [],
             hidden: readStore(HIDDEN_KEY, {}),
-            hiddenKind: readStore(HIDDEN_KIND_KEY, {}),
+            // 範囲（蟲神器市の外枠）は既定で出さない。
+            // 地図一面に薄い塗りと線が乗って地形が見づらくなるため。
+            // 一度でも切り替えたことがあれば、その選択をそのまま使う。
+            hiddenKind: readStore(HIDDEN_KIND_KEY, { area: true }),
             drawMode: 'point'
         };
 
