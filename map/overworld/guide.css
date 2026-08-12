@@ -1037,9 +1037,9 @@ body.guide-with-place .guide-3d { transform: translateX(var(--guide-place-w)); }
     pointer-events: none;
     white-space: pre;
 }
-/* 数字は開発用。既定では出さない。 */
-.city3d-hud { display: none; }
-.city3d.is-debug .city3d-hud { display: block; }
+/* 数字は開発用。既定では出さない（City3D.debug(true) のときだけ）。 */
+.city3d-hud { display: none !important; }
+.city3d.is-debug .city3d-hud { display: block !important; }
 
 /* 閉じるボタンと操作の説明 */
 .city3d-close {
@@ -1244,6 +1244,9 @@ fill="%23ea4335" stroke="rgba(120,20,14,.55)" stroke-width="0.8"/>\
     pointer-events: none;
 }
 .city3d-loading.is-on { display: flex; }
+/* 読み込みに失敗したとき */
+.city3d-loading.is-error { background: rgba(120, 30, 28, .94); }
+.city3d-loading.is-error .city3d-spin { display: none; }
 
 .city3d-spin {
     width: 15px;

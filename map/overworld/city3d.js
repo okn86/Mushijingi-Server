@@ -689,13 +689,15 @@ let pending = false, last = { tris: 0, cnt: { near:0, far:0, vfar:0, xfar:0 }, c
 function frame() { if (pending) return; pending = true; requestAnimationFrame(() => { pending = false; draw(); tick(); }); }
 function tick() {
     if (++fc >= 20) { fps = fc * 1000 / (performance.now() - ft); fc = 0; ft = performance.now(); }
+    window.__stats = { tris: last.tris, ...last.cnt, culled: last.culled, fps,
+                       vram: Math.round(vram/1048576), net: +(net/1048576).toFixed(2) };
+    // 数字は City3D.debug(true) のときだけ。既定では文字列も作らない。
+    if (!host.classList.contains('is-debug')) return;
     hud.textContent =
         `タイル ${tiles.length}（細 ${last.cnt.near} / 中 ${last.cnt.far} / 粗 ${last.cnt.vfar} / 極粗 ${last.cnt.xfar} / 画面外 ${last.culled}）\n` +
         `三角 ${last.tris.toLocaleString()} / GPU ${(vram/1048576).toFixed(0)} MB\n` +
         `通信 ${(net/1048576).toFixed(1)} MB\n` +
         `${fps ? fps.toFixed(0) + ' fps' : '…'}`;
-    window.__stats = { tris: last.tris, ...last.cnt, culled: last.culled, fps,
-                       vram: Math.round(vram/1048576), net: +(net/1048576).toFixed(2) };
 }
 
 
@@ -956,10 +958,25 @@ return {
             // そのあとタイルを読む。boot が終わるまで画面には出さない。
             boot(applyCamera).then(reveal)
                   .catch(function (e) {
-                      if (loading) loading.classList.remove('is-on');
-                      host.classList.add('is-open');
-                      host.classList.add('is-debug');
-                      hud.textContent = 'エラー: ' + e.message;
+                      // 失敗したら 3D は出さず、地図のまま知らせて終わる。
+                      //
+                      // 以前はここで数字パネル（is-debug）を出してエラーを書いていたが、
+                      // 次のフレームで tick() が同じ場所を三角数や fps で上書きするので、
+                      // 「読み込みに失敗すると fps が出っぱなしになる」という
+                      // 分かりにくい見え方になっていた。
+                      booted = false;          // 次に押したときやり直せるように
+                      opened = false;
+                      if (loading) {
+                          loading.classList.add('is-error');
+                          loading.textContent = '3D を読み込めませんでした';
+                          setTimeout(function () {
+                              loading.classList.remove('is-on');
+                              loading.classList.remove('is-error');
+                              loading.innerHTML = '<span class="city3d-spin"></span>3D を読み込み中…';
+                          }, 2600);
+                      }
+                      if (onClose) onClose(null);
+                      console.warn('[city3d]', e);
                   });
         } else {
             reveal();
