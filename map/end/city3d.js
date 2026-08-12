@@ -15,7 +15,7 @@ window.City3D = (function () {
 'use strict';
 
 var BASE = 'city3d/';          // タイルと絵の置き場（呼び出し側で差し替え可）
-var host = null, cv = null, hud = null, help = null, pinBtn = null, gl = null;
+var host = null, cv = null, hud = null, help = null, pinBtn = null, loading = null, gl = null;
 var booted = false, opened = false;
 var onClose = null;
 
@@ -50,7 +50,12 @@ function build(parent) {
 
     help = document.createElement('div');
     help.className = 'city3d-help';
-    help.textContent = 'ドラッグで移動 / 右ドラッグ・Shift+ドラッグで回転 / ホイールで拡大';
+    // 指と マウスでは操作が違うので、書き分ける。
+    var touch = false;
+    try { touch = window.matchMedia('(pointer: coarse)').matches; } catch (e) {}
+    help.textContent = touch
+        ? '1本指で移動 / 2本指でひねると回転・そろえて上下で角度 / つまんで拡大'
+        : 'ドラッグで移動 / 右ドラッグ・Shift+ドラッグで回転 / ホイールで拡大';
 
     host.appendChild(cv);
     host.appendChild(hud);
@@ -58,6 +63,13 @@ function build(parent) {
     host.appendChild(pinBtn);
     host.appendChild(help);
     parent.appendChild(host);
+
+    // 読み込み中の表示。host の外に置く。
+    // 中に入れると、host ごと隠している間はこれも見えない。
+    loading = document.createElement('div');
+    loading.className = 'city3d-loading';
+    loading.innerHTML = '<span class="city3d-spin"></span>3D を読み込み中…';
+    parent.appendChild(loading);
 
     gl = cv.getContext('webgl2', { antialias: true });
     if (!gl) return false;
@@ -367,7 +379,7 @@ function outside(pl, b) {
     return false;
 }
 
-async function boot() {
+async function boot(afterManifest) {
     const man = await (await fetch(BASE + 'tiles.json')).json();
     USE_GZ = !!man.gz && typeof DecompressionStream === 'function';
     center = [man.center[0], 80, man.center[1]];
@@ -385,6 +397,10 @@ async function boot() {
         box: [t.x, (t.y0 != null ? t.y0 : -64), t.z, t.x + t.size, (t.y1 != null ? t.y1 : 200), t.z + t.size],
         gpu: {}, loading: {},
     }));
+
+    // 街の広さが分かったので、ここでカメラを決める。
+    // タイルを読む前に決めておかないと、途中のフレームが違う向きで描かれる。
+    if (afterManifest) afterManifest();
 
     // テクスチャを先に。無いと真っ黒になる。
     // 画像はキャッシュが効く設定で配信されるので、中身が変わったことが
@@ -550,7 +566,7 @@ function draw() {
 
 // ---- 操作 ----
 // canvas は開くときに作るので、結び付けもそのときに行う。
-let drag = null, down = null, pinch = 0;
+let drag = null, down = null, two = null;
 function bindControls() {
     cv.addEventListener('pointerdown', e => {
         pts.set(e.pointerId, [e.clientX, e.clientY]);
@@ -560,11 +576,33 @@ function bindControls() {
     cv.addEventListener('pointermove', e => {
         if (!pts.has(e.pointerId)) return;
         pts.set(e.pointerId, [e.clientX, e.clientY]);
-        if (pts.size >= 2) {           // 二本指はつまみ拡大と向き変え
+        // 二本指。指の間の距離・角度・中点の 3 つを同時に見る。
+        //
+        //   広げる/つまむ … 拡大縮小
+        //   ひねる         … 向きを変える（yaw）
+        //   そろえて上下   … 見下ろす角度を変える（pitch）
+        //
+        // Shift や右ボタンは指では出せないので、これが無いと
+        // スマホでは回転も角度変更もできない（実際できなかった）。
+        if (pts.size >= 2) {
             const v = [...pts.values()];
-            const d = Math.hypot(v[0][0]-v[1][0], v[0][1]-v[1][1]);
-            if (pinch) zoomBy(pinch / d);
-            pinch = d; drag = null;
+            const d = Math.hypot(v[0][0] - v[1][0], v[0][1] - v[1][1]);
+            const a = Math.atan2(v[1][1] - v[0][1], v[1][0] - v[0][0]);
+            const my = (v[0][1] + v[1][1]) / 2;
+            if (two) {
+                if (d > 4 && Math.abs(d - two.d) > 0.5) zoomBy(two.d / d);
+                // 角度は ±π で折り返すので、近いほうの差を取る
+                let da = a - two.a;
+                while (da >  Math.PI) da -= Math.PI * 2;
+                while (da < -Math.PI) da += Math.PI * 2;
+                yaw -= da;
+                // 0.006 だと 170px 動かしただけで真上から水平まで振り切れた。
+                // 画面の高さの半分ほど動かして端から端、くらいが手になじむ。
+                pitch = Math.max(0.10, Math.min(1.55, pitch + (my - two.my) * 0.0035));
+                frame();
+            }
+            two = { d, a, my };
+            drag = null; down = null;
             return;
         }
         if (!drag) return;
@@ -582,7 +620,13 @@ function bindControls() {
     });
     const up = e => {
         pts.delete(e.pointerId);
-        if (pts.size < 2) pinch = 0;
+        // 指を 1 本離したら二本指の基準は捨てる。残さないと、
+        // 次に触れた瞬間に前回との差ぶんだけ画面が飛ぶ。
+        if (pts.size < 2) two = null;
+        if (pts.size === 1) {
+            const v = [...pts.values()][0];
+            drag = [v[0], v[1]];      // 残った指でそのまま移動を続けられる
+        }
         if (!pts.size) drag = null;
         // ほとんど動いていなければ「押した」とみなしてピンを拾う。
         // 少しでも滑らせたらドラッグなので、地図をずらしただけで
@@ -784,7 +828,12 @@ function pinAt(sx, sy) {
 
 // 地図から受け取った位置と縮尺をカメラに移し、真上から見た状態にする。
 // この瞬間の見え方は 2D の地図とほぼ同じになる。
-function applyPending() {
+// カメラを地図の見え方に合わせる。
+//
+// これは「読み込みを始める前」に済ませておく必要がある。あとから直すと、
+// 読み込み中のフレームが前回の角度（初回なら既定の斜め）で描かれ、
+// 出来かけの街が一瞬斜めに見えてしまう。実際そう見えていた。
+function applyCamera() {
     if (!pendingView) return;
     const p = pendingView; pendingView = null;
     const q = clampToTown(p.x, p.z);
@@ -793,11 +842,23 @@ function applyPending() {
     // 立体があるのは街の中だけなので、引きの上限は街が収まるところで止める。
     dist = Math.min(distForView(p.bpp, viewH()), radius * 1.7);
     yaw = 0;
-    pitch = 1.5707;              // ほぼ真上
+    pitch = 1.5707;              // ほぼ真上。この向きなら 2D の地図とほぼ同じ絵。
+}
+
+// 街がひととおり出そろってから見せる。
+// それまでは下の 2D 地図をそのまま見せておく。
+function reveal() {
+    if (!opened) return;
+    if (loading) loading.classList.remove('is-on');
     frame(); need();
-    // 少し置いてから起こす。読み込みが追いつく前に傾けると
-    // 粗い版のまま立体になり、いかにも粗く見えてしまう。
-    setTimeout(() => { if (opened) animatePitch(tiltFor(dist), 900); }, 420);
+    host.classList.add('is-open');
+    if (help) {
+        help.classList.remove('is-gone');
+        setTimeout(function () { help.classList.add('is-gone'); }, 5200);
+    }
+    // 少し置いてから起こす。出た瞬間に動き出すと、切り替わったことが
+    // 分からないまま景色だけ変わる。
+    setTimeout(() => { if (opened) animatePitch(tiltFor(dist), 900); }, 380);
 }
 
 // 起こしたあとの見下ろす角度。
@@ -852,6 +913,8 @@ function closeView() {
     if (!opened) return null;
     opened = false;
     if (host) host.classList.remove('is-open');
+    // 読み込み中に閉じられることもある
+    if (loading) loading.classList.remove('is-on');
     var r = {
         x: center[0], z: center[2],
         blocksPerPx: 2 * dist * Math.tan(FOV / 2) / viewH(),
@@ -867,7 +930,6 @@ return {
     open: function (parent, opts, done) {
         if (!host && !build(parent)) { alert('この端末では 3D を出せません（WebGL2 非対応）'); return false; }
         opened = true;
-        host.classList.add('is-open');
         var o = opts || {};
         var p = clampToTown(o.x != null ? o.x : center[0], o.z != null ? o.z : center[2]);
         pendingView = {
@@ -875,19 +937,22 @@ return {
             bpp: o.blocksPerPx || 1,
         };
         onClose = done || null;
-        if (help) {
-            help.classList.remove('is-gone');
-            setTimeout(function () { help.classList.add('is-gone'); }, 5200);
-        }
+        // 先にカメラを決めてから読み込む。順番が逆だと出来かけが斜めに映る。
+        if (booted) applyCamera();
+        if (loading) loading.classList.add('is-on');
         if (!booted) {
             booted = true;
-            boot().then(function () { applyPending(); })
+            // 一覧を読んだ直後（＝街の広さが分かった時点）でカメラを決め、
+            // そのあとタイルを読む。boot が終わるまで画面には出さない。
+            boot(applyCamera).then(reveal)
                   .catch(function (e) {
+                      if (loading) loading.classList.remove('is-on');
+                      host.classList.add('is-open');
                       host.classList.add('is-debug');
                       hud.textContent = 'エラー: ' + e.message;
                   });
         } else {
-            applyPending();
+            reveal();
         }
         return true;
     },
@@ -901,6 +966,8 @@ return {
         try { showPins(localStorage.getItem('city3dPins') !== '0'); } catch (e) { frame(); }
     },
     pinsVisible: function () { return pinsOn; },
+    // 動作確認用にカメラの値を見せる
+    cam: function () { return { yaw: +yaw.toFixed(3), pitch: +pitch.toFixed(3), dist: Math.round(dist) }; },
     // 選んでいる地点。null で解除。
     setSelected: function (name) { setSelected(name); },
     // 特定の地点へ寄せる

@@ -1214,3 +1214,37 @@ fill="%23ea4335" stroke="rgba(120,20,14,.55)" stroke-width="0.8"/>\
     .city3d-pintoggle { padding: 0 13px; }
     .city3d-pintoggle > span { display: none; }
 }
+
+/* 3D の読み込み中に地図の上へ出す表示。
+   3D 本体は出来上がるまで隠しておき、その間は下の 2D 地図を見せる。
+   読み込み途中の街が斜めに一瞬映るのを避けるため。 */
+.city3d-loading {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    z-index: 1250;
+    display: none;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 18px;
+    font: 600 13px/1 system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
+    color: #f2f2f3;
+    background: rgba(24, 24, 27, .92);
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, .45);
+    transform: translate(-50%, -50%);
+    backdrop-filter: blur(6px);
+    pointer-events: none;
+}
+.city3d-loading.is-on { display: flex; }
+
+.city3d-spin {
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(255, 255, 255, .28);
+    border-top-color: #f2f2f3;
+    border-radius: 50%;
+    animation: city3d-spin .8s linear infinite;
+}
+@keyframes city3d-spin { to { transform: rotate(360deg); } }
